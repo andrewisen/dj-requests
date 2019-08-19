@@ -21,6 +21,7 @@
 		var input = document.getElementById("searchTxt");
 		searchString = input.value
 		searchString = searchString.replace(" ", '-'); 
+		searchString = searchString.toLowerCase();
 		var requestURL = "https://songbpm.com/api/searches/" + searchString;
 		var xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = function() {
