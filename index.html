@@ -5,80 +5,86 @@
 	<meta name="description" content="DJ requester">
 	<meta name="author" content="André Wisén">
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head> 
 <body>
+	<div style="text-align: center;">
+		<h1 style="font-size:4vw;">DJ Request(er)</h1>
+		<div style="font-size:2vw;">
+			<input name="searchTxt" type="text" maxlength="512" id="searchTxt" class="searchField"/>
+			<button type="button" onclick="loadDoc()">Search</button>
+		</div>
+		<div style="font-size:2vw;">
+			<div style="display: inline-block; text-align: left;">
+				<p id="jsonResponse"></p>
+				<p id="parseResponse"></p>
+			</div>
 
-	<h1>DJ Request(er)</h1>
+		<script>
 
-	<input name="searchTxt" type="text" maxlength="512" id="searchTxt" class="searchField"/>
-	<button type="button" onclick="loadDoc()">Search</button>
-
-	<p id="jsonResponse"></p>
-	<p id="parseResponse"></p>
-
-	<script>
-
-		// Credit: https://stackoverflow.com/a/1714899
-		serialize = function(obj) {
-			var str = [];
-			for (var p in obj) if (obj.hasOwnProperty(p)) {
-				str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-			}
-				return str.join("&");
-		}
-
-		// foo=hi%20there&bar=100%25
-
-		function loadDoc() {
-			var input = document.getElementById("searchTxt");
-			searchString = input.value
-			searchString = searchString.replace(" ", '-'); 
-			searchString = searchString.toLowerCase();
-			var requestURL = "https://songbpm.com/api/searches/" + searchString;
-			var xhttp = new XMLHttpRequest();
-			xhttp.onreadystatechange = function() {
-				if (this.readyState == 4 && this.status == 404) {
-					document.getElementById("parseResponse").innerHTML = "404 Error";
+			// Credit: https://stackoverflow.com/a/1714899
+			serialize = function(obj) {
+				var str = [];
+				for (var p in obj) if (obj.hasOwnProperty(p)) {
+					str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
 				}
+					return str.join("&");
+			}
 
-				//if (this.readyState == 4 && this.status == 200) {
-				if (this.status == 200) {
-					// document.getElementById("jsonResponse").innerHTML = this.responseText;
-					var requestResponse = this.responseText;
-					var JSONresponse = JSON.parse(requestResponse);
-					// alert(typeof requestResponse);
+			// foo=hi%20there&bar=100%25
 
-					var JSONsearch = JSONresponse.search;
-					var JSONsongs = JSONsearch.songs;
-
-					var outputTxt = "";
-
-					JSONsongs.forEach(function(song) {
-						// console.log(song);
-						var artist = song.artist;
-						var title = song.title;
-						var spotifyUrl = song.spotifyUrl;
-
-						serializeTitle = artist + " - " + title;
-						serializeOutputTxt = serialize({songRequest: serializeTitle});
-						console.log(serializeOutputTxt);
-
-
-						// var songOutput = title + " by " +  artist + " " + '<a href="' + spotifyUrl + '" target="_blank">' + "Request" +'</a>'
-
-						var songOutput = title + " by " +  artist + " " + '<a href="requests.php?' + serializeOutputTxt + '">' + "Request" +'</a>'
-
-						outputTxt = outputTxt + songOutput + "<br>";
-						
-					});
-
-					document.getElementById("parseResponse").innerHTML = outputTxt;
+			function loadDoc() {
+				var input = document.getElementById("searchTxt");
+				searchString = input.value
+				searchString = searchString.replace(" ", '-'); 
+				searchString = searchString.toLowerCase();
+				var requestURL = "https://songbpm.com/api/searches/" + searchString;
+				var xhttp = new XMLHttpRequest();
+				xhttp.onreadystatechange = function() {
+					if (this.readyState == 4 && this.status == 404) {
+						document.getElementById("parseResponse").innerHTML = "404 Error";
 					}
-			};
-			xhttp.open("GET", requestURL, true);
-			xhttp.send();
-		}
-	</script>
+
+					//if (this.readyState == 4 && this.status == 200) {
+					if (this.status == 200) {
+						// document.getElementById("jsonResponse").innerHTML = this.responseText;
+						var requestResponse = this.responseText;
+						var JSONresponse = JSON.parse(requestResponse);
+						// alert(typeof requestResponse);
+
+						var JSONsearch = JSONresponse.search;
+						var JSONsongs = JSONsearch.songs;
+
+						var outputTxt = "";
+
+						JSONsongs.forEach(function(song) {
+							// console.log(song);
+							var artist = song.artist;
+							var title = song.title;
+							var spotifyUrl = song.spotifyUrl;
+
+							serializeTitle = artist + " - " + title;
+							serializeOutputTxt = serialize({songRequest: serializeTitle});
+							console.log(serializeOutputTxt);
+
+
+							// var songOutput = title + " by " +  artist + " " + '<a href="' + spotifyUrl + '" target="_blank">' + "Request" +'</a>'
+
+							var songOutput = title + " by " +  artist + " " + '<a href="requests.php?' + serializeOutputTxt + '">' + "Request" +'</a>'
+
+							outputTxt = outputTxt + songOutput + "<br>";
+							
+						});
+
+						document.getElementById("parseResponse").innerHTML = outputTxt;
+						}
+				};
+				xhttp.open("GET", requestURL, true);
+				xhttp.send();
+			}
+		</script>
+	</div>
+	</div>
 
 </body>
 </html>
