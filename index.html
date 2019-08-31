@@ -18,6 +18,17 @@
 
 	<script>
 
+		// Credit: https://stackoverflow.com/a/1714899
+		serialize = function(obj) {
+			var str = [];
+			for (var p in obj) if (obj.hasOwnProperty(p)) {
+				str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+			}
+				return str.join("&");
+		}
+
+		// foo=hi%20there&bar=100%25
+
 		function loadDoc() {
 			var input = document.getElementById("searchTxt");
 			searchString = input.value
@@ -43,12 +54,22 @@
 					var outputTxt = "";
 
 					JSONsongs.forEach(function(song) {
-						console.log(song);
+						// console.log(song);
 						var artist = song.artist;
 						var title = song.title;
-						var spotifyUrl = song.spotifyUrl
-						var songOutput = title + " by " +  artist + " " + '<a href="' + spotifyUrl + '" target="_blank">' + "Request" +'</a>'
-						outputTxt = outputTxt + songOutput + "<br>";  
+						var spotifyUrl = song.spotifyUrl;
+
+						serializeTitle = artist + " - " + title;
+						serializeOutputTxt = serialize({songRequest: serializeTitle});
+						console.log(serializeOutputTxt);
+
+
+						// var songOutput = title + " by " +  artist + " " + '<a href="' + spotifyUrl + '" target="_blank">' + "Request" +'</a>'
+
+						var songOutput = title + " by " +  artist + " " + '<a href="requests.php?' + serializeOutputTxt + '">' + "Request" +'</a>'
+
+						outputTxt = outputTxt + songOutput + "<br>";
+						
 					});
 
 					document.getElementById("parseResponse").innerHTML = outputTxt;
