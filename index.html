@@ -44,7 +44,8 @@
 			function loadDoc() {
 				var input = document.getElementById("searchTxt");
 				searchString = input.value
-				searchString = searchString.replace(" ", '-'); 
+				//searchString = searchString.replace(" ", '-'); 
+				searchString = searchString.replace(/ /g, '-');
 				searchString = searchString.toLowerCase();
 				var requestURL = "https://songbpm.com/api/searches/" + searchString;
 				var xhttp = new XMLHttpRequest();
