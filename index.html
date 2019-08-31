@@ -12,7 +12,7 @@
 		<h1 style="font-size:4vw;">DJ Request(er)</h1>
 		<div style="font-size:2vw;">
 			<input name="searchTxt" type="text" maxlength="512" id="searchTxt" class="searchField"/>
-			<button type="button" onclick="loadDoc()">Search</button>
+			<button id="myBtn" type="button" onclick="loadDoc()">Search</button>
 		</div>
 		<div style="font-size:2vw;">
 			<div style="display: inline-block; text-align: left;">
@@ -21,6 +21,14 @@
 			</div>
 
 		<script>
+
+			var input = document.getElementById("searchTxt");
+			input.addEventListener("keyup", function(event) {
+				if (event.keyCode === 13) {
+					event.preventDefault();
+					document.getElementById("myBtn").click();
+				}
+			});
 
 			// Credit: https://stackoverflow.com/a/1714899
 			serialize = function(obj) {
