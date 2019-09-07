@@ -22,6 +22,7 @@
 
 		<script>
 
+			// Wait for user input
 			var input = document.getElementById("searchTxt");
 			input.addEventListener("keyup", function(event) {
 				if (event.keyCode === 13) {
@@ -30,8 +31,9 @@
 				}
 			});
 
-
+			// Query-string encoding of a JavaScript Object
 			// Credit: https://stackoverflow.com/a/1714899
+			// Example: foo=hi%20there&bar=100%25
 			serialize = function(obj) {
 				var str = [];
 				for (var p in obj) if (obj.hasOwnProperty(p)) {
@@ -40,23 +42,23 @@
 					return str.join("&");
 			}
 
-			// foo=hi%20there&bar=100%25
-
+			// Load songs
 			function loadDoc() {
 				var input = document.getElementById("searchTxt");
 				searchString = input.value
-				//searchString = searchString.replace(" ", '-'); 
+				// Regex replace
 				searchString = searchString.replace(/ /g, '-');
 				searchString = searchString.toLowerCase();
 				searchString = searchString
 					.replace(/å/g, 'a')
-					.replace(/Å/g, 'A')
 					.replace(/ä/g, 'a')
-					.replace(/Ä/g, 'a')
-					.replace(/ö/g, 'o')
-					.replace(/Ö/g, 'O');
+					.replace(/ö/g, 'o');
+
+				
 				var requestURL = "https://songbpm.com/api/searches/" + searchString;
 				console.log(requestURL);
+				
+				// Make API call
 				var xhttp = new XMLHttpRequest();
 				xhttp.onreadystatechange = function() {
 					if (this.readyState == 4 && this.status == 404) {
@@ -65,10 +67,9 @@
 
 					//if (this.readyState == 4 && this.status == 200) {
 					if (this.status == 200) {
-						// document.getElementById("jsonResponse").innerHTML = this.responseText;
+						
 						var requestResponse = this.responseText;
 						var JSONresponse = JSON.parse(requestResponse);
-						// alert(typeof requestResponse);
 
 						var JSONsearch = JSONresponse.search;
 						var JSONsongs = JSONsearch.songs;
@@ -76,7 +77,6 @@
 						var outputTxt = "";
 
 						JSONsongs.forEach(function(song) {
-							// console.log(song);
 							var artist = song.artist;
 							var title = song.title;
 							var spotifyUrl = song.spotifyUrl;
@@ -85,8 +85,6 @@
 
 							serializeOutputTxt = serialize({songRequest: serializeTitle});
 							console.log(serializeOutputTxt);
-
-							// var songOutput = title + " by " +  artist + " " + '<a href="' + spotifyUrl + '" target="_blank">' + "Request" +'</a>'
 
 							var songOutput = title + " by " +  artist + " " + '<a href="requests.php?' + serializeOutputTxt + '">' + "Request" +'</a>'
 
