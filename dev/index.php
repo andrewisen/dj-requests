@@ -60,6 +60,7 @@
 				// echo $line . "<br/>";
 
 				$string = str_replace(' ', '', $string);
+
 				// Save the World
 				// "songRequest=Toby%20Fox%20-%20SAVE%20The%20World"
 
@@ -67,9 +68,9 @@
 				$line2 = substr($line, $pos + 2); 
 
 				$line3 = str_replace(' ', '%20', $line2);
-				$line4 = "songRequest=" . $line3;
-
-				echo '<a href="requests.php?' . $line4 . '">'. $line . "</a>" . "<br/>";
+				$line4 = "purgeRequest=" . $line3;
+				console.log($line2);
+				echo '<a href="purge.php?' . $line4 . '">'. $line . "</a>" . "<br/>";
 
 
 			}
