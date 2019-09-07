@@ -1,8 +1,8 @@
 <?php
+	// GET Request
+	// Example: purge.php?purgeRequest=Swedish%20House%20Mafia%20-%20Save%20The%20World
 	$songRequest = $_GET['purgeRequest'];
 	$songRequest = str_replace('%20',' ', $songRequest);
-	// print_r($songRequest);
-
 	
 	$path = "../requests.txt";
 	$lines = file($path);
@@ -10,13 +10,13 @@
 	foreach($lines as $key => $line){
 		if(stristr($line, $remove)){
 			unset($lines[$key]);
-			// print_r("Deleted");
 		}
 	}
+
+	// Might cause #6
 	$data = implode('\n', array_values($lines));
 
 	$file = fopen($path, "w") or die("Unable to open file!");
-	print_r($data);
 	fwrite($file, $data);
 	fclose($file);
 
