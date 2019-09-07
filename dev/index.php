@@ -53,7 +53,25 @@
 			unset($song);
 
 			foreach ( $output as $line ) {
-				echo $line . "<br/>";
+				// echo $line . "<br/>";
+				#<a href="requests.php?' + serializeOutputTxt + '">' + "Request" +'</a>'
+
+				//echo '<a href="#">' . $line . "</a>" . "<br/>";
+				// echo $line . "<br/>";
+
+				$string = str_replace(' ', '', $string);
+				// Save the World
+				// "songRequest=Toby%20Fox%20-%20SAVE%20The%20World"
+
+				$pos = strpos($line, ":");
+				$line2 = substr($line, $pos + 2); 
+
+				$line3 = str_replace(' ', '%20', $line2);
+				$line4 = "songRequest=" . $line3;
+
+				echo '<a href="requests.php?' . $line4 . '">'. $line . "</a>" . "<br/>";
+
+
 			}
 
 			function clearTxt(){
