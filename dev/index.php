@@ -23,62 +23,64 @@
 			header("Cache-Control: post-check=0, pre-check=0", false);
 			header("Pragma: no-cache");
 
-			$songs= array();
-			$output= array();
+			$songs = array();
+			$output = array();
 
+			// Open request file and store each line (i.e. each song) in an array
 			$fh = fopen('../requests.txt','r');
 			while ($line = fgets($fh)) {
 				array_push($songs,$line);
 			}
 
 			fclose($fh);
-			//print_r($songs);
 
+			// Count how many times each song/request appears
 			foreach ($songs as &$song) {
 				$tempSong = "";
-
-				// print_r($song);
 				$tmp = array_count_values($songs);
-				$cnt = $tmp[$song];
-				// print_r($cnt);
-				
+				$cnt = $tmp[$song]; // cnt count
+
 				$tempSong .= $cnt . ": " .$song;
 				array_push($output,$tempSong);
 			}
 			
+			// Remove duplicates
 			$output = array_unique($output);
+
+			// Sort decending
 			rsort($output);
 
-			unset($value); // break the reference 
+			// Break the references
+			unset($value); 
 			unset($song);
 
-			foreach ( $output as $line ) {
+			// Print each song
+			// Template: 	"[# of requests]: [Artist] - [Title]""
+			// Example: 	"3: Avicci - Levels"
+
+			// Each purge request gets formated into a query format
+			// IN: 	"3: Avicci - Levels"
+			// OUT:	"Avicii%20-%20Levels"
+			foreach ( $output as $song ) {
+				///// DEBUG /////
 				// echo $line . "<br/>";
 				#<a href="requests.php?' + serializeOutputTxt + '">' + "Request" +'</a>'
 
 				//echo '<a href="#">' . $line . "</a>" . "<br/>";
 				// echo $line . "<br/>";
+				///// DEBUG /////
 
-				$string = str_replace(' ', '', $string);
+				$pos = strpos($song, ":");
+				$songQuery = substr($song, $pos + 2); 
 
-				// Save the World
-				// "songRequest=Toby%20Fox%20-%20SAVE%20The%20World"
-
-				$pos = strpos($line, ":");
-				$line2 = substr($line, $pos + 2); 
-
-				$line3 = str_replace(' ', '%20', $line2);
-				$line4 = "purgeRequest=" . $line3;
-				console.log($line2);
-				echo '<a href="purge.php?' . $line4 . '">'. $line . "</a>" . "<br/>";
-
-
+				$songQuery = str_replace(' ', '%20', $songQuery);
+				$querySong = "purgeRequest=" . $songQuery;
+				echo '<a href="purge.php?' . $songQuery . '">'. $song . "</a>" . "<br/>";
 			}
 
+			// clearTxt = Purge all
 			function clearTxt(){
-				// echo "Reqeusts purged!";
 				$fh = fopen('../requests.txt','w');
-				//fwrite($fh,"");
 				fclose($fh);
 				header("Refresh:0");
 			}
