@@ -30,6 +30,7 @@
 				}
 			});
 
+
 			// Credit: https://stackoverflow.com/a/1714899
 			serialize = function(obj) {
 				var str = [];
@@ -47,6 +48,13 @@
 				//searchString = searchString.replace(" ", '-'); 
 				searchString = searchString.replace(/ /g, '-');
 				searchString = searchString.toLowerCase();
+				searchString = searchString
+					.replace(/å/g, 'a')
+					.replace(/Å/g, 'A')
+					.replace(/ä/g, 'a')
+					.replace(/Ä/g, 'a')
+					.replace(/ö/g, 'o')
+					.replace(/Ö/g, 'O');
 				var requestURL = "https://songbpm.com/api/searches/" + searchString;
 				var xhttp = new XMLHttpRequest();
 				xhttp.onreadystatechange = function() {
@@ -73,9 +81,9 @@
 							var spotifyUrl = song.spotifyUrl;
 
 							serializeTitle = artist + " - " + title;
+
 							serializeOutputTxt = serialize({songRequest: serializeTitle});
 							console.log(serializeOutputTxt);
-
 
 							// var songOutput = title + " by " +  artist + " " + '<a href="' + spotifyUrl + '" target="_blank">' + "Request" +'</a>'
 
