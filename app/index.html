@@ -138,7 +138,9 @@
 						serializeOutputTxt = serialize({songRequest: serializeTitle});
 						console.log(serializeOutputTxt);
 
-						var songOutput = title + " by " +  artist + " " + '<a href="requests.php?' + serializeOutputTxt + '">' + "Request" +'</a>'
+						// var songOutput = title + " by " +  artist + " " + '<a href="requests.php?' + serializeOutputTxt + '">' + "Request" +'</a>'
+
+						var songOutput = '<a href="requests.php?' + serializeOutputTxt + '">' + title + " by " +  artist +'</a>'
 
 						//////// DEBUG ////////
 						//var songOutput = '<a href="requests.php?' + serializeOutputTxt + '" onclick="MyFunction();return false;">' + title + " by " +  artist +'</a>'
