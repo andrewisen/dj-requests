@@ -12,6 +12,6 @@
 	// PHP_EOL = End Of Line
 	fwrite($myFile, $songRequest.PHP_EOL);
 	fclose($myFile);
-	header("Location: ./index.html");
+	header("Location: ./index.html?requestSent");
 	die();
 ?>

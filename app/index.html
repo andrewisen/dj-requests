@@ -3,9 +3,22 @@
 <head>
 	<title>DJ Request(er)</title>
 	<meta name="description" content="DJ requester">
-	<meta name="author" content="">
+	<meta name="author" content="Arvid & André">
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	
+	<!-- FAVICONS -->
+	<link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+	<link rel="manifest" href="/favicon/site.webmanifest">
+	<link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#563d7c">
+	<link rel="shortcut icon" href="/favicon/favicon.ico">
+	<meta name="apple-mobile-web-app-title" content="DJ Requests">
+	<meta name="application-name" content="DJ Requests">
+	<meta name="msapplication-TileColor" content="#ffc40d">
+	<meta name="msapplication-config" content="/favicon/browserconfig.xml">
+	<meta name="theme-color" content="#ffffff">
 
 	<!-- BOOSTRAP 4 -->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -14,8 +27,8 @@
 	<link href="css/sticky-footer-navbar.css" type="text/css"  rel="stylesheet">
 	<link href="css/search.css" type="text/css" rel="stylesheet">
 </head> 
-<body class="text-center">>
-
+<body class="dj" onload="checkStatus()">
+	<!--
 	<header>
 		<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
 			<a class="navbar-brand" href="#">DJ Request(er)</a>
@@ -38,25 +51,36 @@
 			</div>
 		</nav>
 	</header>
+	-->
+
 
 	<!-- Begin page content -->
 	<main role="main" class="container">
-		<h3 class="mt-5"></h1>
-		<p class="text-center">Use the search field to search for a song.</p>
-		<p class="lead">
-			<input class="form-control mr-sm-2" type="search" placeholder="Search for a song" aria-label="Search for a song" name="searchTxt" id="searchTxt">
-		</p>
-		<p class="lead">
-			<button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="myBtn" onclick="loadDoc()">Search</button>
-		</p>
-		<p class="text-center" id="parseResponse"></p>
-		<br>
+		<div class="djSearch">
+			<div class="text-center mb-4">
+				<img class="mb-4" src="./img/logo-300.png" alt="" width="72" height="72">
+				<h1 class="h3 mb-3 font-weight-normal">DJ Requester</h1>
+				<p>Use the <code>search bar</code> to find & request your favorite song.
+			</div>
+			<div class="text-left mb-4">
+				<p class="lead">
+					<input class="form-control mr-sm-2" type="search" placeholder="Enter a song (artist or title)" aria-label="Search for a song" name="searchTxt" id="searchTxt" required autofocus>
+				</p>
+				<p>
+					<button class="btn btn-lg btn-primary btn-block" type="submit" id="myBtn" onclick="loadDoc()">Search</button>
+				</p>
+				<!--<p class="text-left mb-4" id="parseResponse"></p>-->
+			</div>
+			<div class="text-left mb-4" id="parseResponse"></div>
+			<br>
+		</div>
 	</main>
 
     <footer class="footer">
       <div class="container">
         <span class="text-muted">
-        	&copy; 1970<script>new Date().getFullYear()>2010&&document.write("-"+new Date().getFullYear());</script>, Arvid & André.
+        	&copy; <script>new Date().getFullYear()>document.write(new Date().getFullYear());</script> <a href="https://awide.se" target="_blank">Arvid</a> & <a href="https://andrewisen.se" target="_blank">André</a> - 
+        	<a href="http://github.com/andrewisen/dj-requests" target="_blank">GitHub</a>
         </span>
       </div>
     </footer>
@@ -97,9 +121,23 @@
 				}
 					return str.join("&");
 			}
+			// 
+			function checkStatus(){
+				var status =  window.location.search.substr(1);
+				if (status == "requestSent") {
+					document.getElementById("parseResponse").innerHTML = "Thank you for your <code>request</code>!<br>The DJ(s) will do his, her, or their best to play your favorite song.";
+				}
+
+
+			//	
+			}
 
 			// Load songs
 			function loadDoc() {
+
+
+
+
 				var input = document.getElementById("searchTxt");
 				searchString = input.value
 				// Regex replace
@@ -118,7 +156,8 @@
 				var xhttp = new XMLHttpRequest();
 				xhttp.onreadystatechange = function() {
 					if (this.readyState == 4 && this.status == 404) {
-						document.getElementById("parseResponse").innerHTML = "404 Error";
+						var error404msg = "Your song wasn't found.<br> Be sure to enter the exact artist/titel."
+						document.getElementById("parseResponse").innerHTML = error404msg;
 					}
 
 					//if (this.readyState == 4 && this.status == 200) {
@@ -144,8 +183,18 @@
 
 							var songOutput = title + " by " +  artist + " " + '<a href="requests.php?' + serializeOutputTxt + '">' + "Request" +'</a>'
 
+							//var songOutput = '<a href="requests.php?' + serializeOutputTxt + '" onclick="MyFunction();return false;">' + title + " by " +  artist +'</a>'
+
+							//var songOutput = title + " by " +  artist + " " + '<a class="btn btn-link" href="requests.php?' + serializeOutputTxt + '">' + "Request" +'</a>'
+
+							// 
 							outputTxt = outputTxt + songOutput + "<br>";
-							
+							//outputTxt = '<div class="col-md-9">' + songOutput + '</div>' + '<div class="col-md-3">' + "SHARE" + '<div>' + "<br>";
+							//var form = document.getElementById("searchTxt");
+							//document.getElementById("searchTxt").value = 'Click on a link to request';
+							document.getElementById("searchTxt").value = '';
+							document.getElementsByName('searchTxt')[0].placeholder='To request, click on a song';
+
 						});
 
 						document.getElementById("parseResponse").innerHTML = outputTxt;
