@@ -16,8 +16,10 @@ The page updates periodically.
 
 ## Installation
 Clone repo.
-Upload the content to your FTP or run it locally with [Docker](https://docker.com):
-`docker run --name dj-requests -v `pwd`:/var/www/html -p 9000:80 -d php:7.2-apache`
+* Upload the content to your FTP or 
+* Run it locally with [Docker](https://docker.com):
+```docker run --name dj-requests -v `pwd`/app:/var/www/html -p 9000:80 -d php:7.2-apache```    
+The site is now running at [http://localhost:9000](http://localhost:9000).
 
 ## Contributing
 Pull requests are welcome.
