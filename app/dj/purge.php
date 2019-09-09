@@ -4,7 +4,7 @@
 	$songRequest = $_GET['purgeRequest'];
 	$songRequest = str_replace('%20',' ', $songRequest);
 	
-	$path = "../requests.txt";
+	$path = "requests.txt";
 	$lines = file($path);
 	$remove = $songRequest;
 	foreach($lines as $key => $line){
