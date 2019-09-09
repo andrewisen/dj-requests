@@ -27,7 +27,7 @@
 			$output = array();
 
 			// Open request file and store each line (i.e. each song) in an array
-			$fh = fopen('../requests.txt','r');
+			$fh = fopen('requests.txt','r');
 			while ($line = fgets($fh)) {
 				array_push($songs,$line);
 			}
@@ -80,7 +80,7 @@
 
 			// clearTxt = Purge all
 			function clearTxt(){
-				$fh = fopen('../requests.txt','w');
+				$fh = fopen('requests.txt','w');
 				fclose($fh);
 				header("Refresh:0");
 			}
