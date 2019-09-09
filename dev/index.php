@@ -75,7 +75,7 @@
 
 				$songQuery = str_replace(' ', '%20', $songQuery);
 				$querySong = "purgeRequest=" . $songQuery;
-				echo '<a href="purge.php?' . $songQuery . '">'. $song . "</a>" . "<br/>";
+				echo '<a href="purge.php?' . $querySong . '">'. $song . "</a>" . "<br/>";
 			}
 
 			// clearTxt = Purge all
