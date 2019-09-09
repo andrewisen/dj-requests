@@ -32,7 +32,7 @@
 		<div class="djSearch">
 			<!-- LOGO & DESCRIPTION -->
 			<div class="text-center mb-4">
-				<img class="mb-4" src="./img/logo-300.png" alt="" width="72" height="72">
+				<a href="?easterEgg"><img class="mb-4" src="./img/logo-300.png" alt="" width="72" height="72"></a>
 				<h1 class="h3 mb-3 font-weight-normal">DJ Requester</h1>
 				<p>Use the <code>search bar</code> to find & request your favorite song.
 			</div>
@@ -87,6 +87,9 @@
 			var status =  window.location.search.substr(1);
 			if (status == "requestSent") {
 				document.getElementById("parseResponse").innerHTML = "Thank you for your <code>request</code>!<br>The DJ(s) will do his, her, or their best to play your favorite song.";
+			}
+			if (status == "easterEgg") {
+				document.getElementById("parseResponse").innerHTML = "You pressed the logo...<br>Congratz, you found this <code>message</code>!";
 			}
 		}
 
