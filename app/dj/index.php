@@ -33,6 +33,7 @@
       <!--<a class="navbar-brand" href="#">Admin Page</a>-->
 		<a class="navbar-brand" href="#">
 		<img src="../img/logo-white-300.png" width="30" height="30" alt="">
+		Admin Page
 		</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
