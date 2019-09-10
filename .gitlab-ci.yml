@@ -1,0 +1,10 @@
+stages:
+  - deploy
+
+deploy:
+  stage: deploy
+  image: cschlosser/alpine-lftps
+  only:
+    - master
+  script:
+    - lftp -u $ftp_username,$ftp_password -e "mirror -R app .;quit" $ftp_servername
