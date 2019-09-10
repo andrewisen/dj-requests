@@ -34,7 +34,7 @@
 			<div class="text-center mb-4">
 				<a href="?easterEgg"><img class="mb-4" src="./img/logo-300.png" alt="" width="72" height="72"></a>
 				<h1 class="h3 mb-3 font-weight-normal">DJ Requester</h1>
-				<p>Use the <code>search bar</code> to find & request your favorite song.
+				<p>Use the <code data-toggle="modal" data-target="#searchBarModal">search bar</code> to find and <code data-toggle="modal" data-target="#requestSongModal">request</code> your favorite song.
 			</div>
 			<!-- SEARCH BAR % BUTTON -->
 			<div class="text-left mb-4">
@@ -50,6 +50,48 @@
 			<br>
 		</div>
 	</main>
+
+<!-- Modal -->
+<div class="modal fade" id="searchBarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="exampleModalLongTitle">Search bar</h5>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="text-left modal-body">
+We look up songs from a huge database. Your song will hopefully be there. Make sure you spell it correctly.
+</div>
+<div class="modal-footer">
+<button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="requestSongModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="exampleModalLongTitle">Request a song</h5>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="text-left modal-body">
+Once a song has been requested, the DJ will do its best to play it. Keep in mind that the DJ might not have your requested song.<br><br>In addition, now might not be the best time to play your song. The DJ might wait a while before playing it.
+</div>
+<div class="modal-footer">
+<button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+</div>
+</div>
+</div>
+</div>
+
+
 
 	<footer class="footer">
 		<div class="container">
@@ -86,7 +128,7 @@
 		function checkStatus(){
 			var status =  window.location.search.substr(1);
 			if (status == "requestSent") {
-				document.getElementById("parseResponse").innerHTML = "Thank you for your <code>request</code>!<br>The DJ(s) will do his, her, or their best to play your favorite song.";
+				document.getElementById("parseResponse").innerHTML = 'Thank you for your <code data-toggle="modal" data-target="#requestSongModal">request</code>.<br>The DJ(s) will do his, her, or their best to play your favorite song.';
 			}
 			if (status == "easterEgg") {
 				document.getElementById("parseResponse").innerHTML = "You pressed the logo...<br>Congratz, you found this <code>message</code>!";
