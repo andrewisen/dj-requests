@@ -51,7 +51,7 @@
 		</div>
 	</main>
 
-<!-- Modal -->
+<!-- MODAL SEARCH BAR -->
 <div class="modal fade" id="searchBarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 <div class="modal-dialog modal-dialog-centered" role="document">
 <div class="modal-content">
@@ -71,7 +71,7 @@ We look up songs from a huge database. Your song will hopefully be there. Make s
 </div>
 </div>
 
-<!-- Modal -->
+<!-- MODAL REQUEST SONG -->
 <div class="modal fade" id="requestSongModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 <div class="modal-dialog modal-dialog-centered" role="document">
 <div class="modal-content">
@@ -91,13 +91,37 @@ Once a song has been requested, the DJ will do its best to play it. Keep in mind
 </div>
 </div>
 
+<!-- MODAL ABOUT -->
+<div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="exampleModalLongTitle">About</h5>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="text-left modal-body">
+Made with <span style="color: #e25555;">&hearts;</span> in Stockholm, Sweden.<br><br>
+Built with Boostrap 4, PHP, and a bit custom CSS.<br>
+You can clone or fork this project on <a href="http://github.com/andrewisen/dj-requests" target="_blank">GitHub</a>.
+</div>
+<div class="modal-footer">
+<button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+<form action="http://github.com/andrewisen/dj-requests" target="_blank">
+	<button type="submit" class="btn btn-primary">GitHub Repo</button>
+</form>
+</div>
+</div>
+</div>
+</div>
 
 
 	<footer class="footer">
 		<div class="container">
 			<span class="text-muted">
 			&copy; <script>new Date().getFullYear()>document.write(new Date().getFullYear());</script> <a href="https://awide.se" target="_blank">Arvid</a> & <a href="https://andrewisen.se" target="_blank">André</a> - 
-			<a href="http://github.com/andrewisen/dj-requests" target="_blank">GitHub</a>
+			<a href="#" data-toggle="modal" data-target="#aboutModal">About</a>
 			</span>
 		</div>
 	</footer>
@@ -128,7 +152,7 @@ Once a song has been requested, the DJ will do its best to play it. Keep in mind
 		function checkStatus(){
 			var status =  window.location.search.substr(1);
 			if (status == "requestSent") {
-				document.getElementById("parseResponse").innerHTML = 'Thank you for your <code data-toggle="modal" data-target="#requestSongModal">request</code>.<br>The DJ(s) will do his, her, or their best to play your favorite song.';
+				document.getElementById("parseResponse").innerHTML = 'Thank you for your <code data-toggle="modal" data-target="#requestSongModal">request</code><br><br>The DJ(s) will do his, her, or their best to play your favorite song.';
 			}
 			if (status == "easterEgg") {
 				document.getElementById("parseResponse").innerHTML = "You pressed the logo...<br>Congratz, you found this <code>message</code>!";
