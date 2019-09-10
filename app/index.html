@@ -45,9 +45,16 @@
 					<button class="btn btn-lg btn-primary btn-block" type="submit" id="myBtn" onclick="loadDoc()">Search</button>
 				</p>
 			</div>
+			<!-- MOTD -->
+			<!--<div class="alert alert-info" id="motdDIV">
+			<strong>Info!</strong> Tonight we only play 80s.<br>
+			We might play 90s.
+			</div>-->
+
 			<!-- SEARCH RESULTS -->
 			<div class="text-left mb-4" id="parseResponse"></div>
 			<br>
+
 		</div>
 	</main>
 
@@ -159,6 +166,18 @@ You can clone or fork this project on <a href="http://github.com/andrewisen/dj-r
 			}
 		}
 
+		function hideMOTD() {
+			var motd = document.getElementById("motdDIV");
+			motd.style.display = "none";
+			/*
+			if (motd.style.display === "none") {
+				motd.style.display = "block";
+			} else {
+				motd.style.display = "none";
+			}
+			*/
+		}
+
 		// Load songs
 		function loadDoc() {
 			var input = document.getElementById("searchTxt");
@@ -187,6 +206,8 @@ You can clone or fork this project on <a href="http://github.com/andrewisen/dj-r
 				// Should be better implemented
 
 				if (this.status == 200) {
+					hideMOTD();
+
 					// Yes, this is a bit redundant...
 
 					var requestResponse = this.responseText;
@@ -237,7 +258,7 @@ You can clone or fork this project on <a href="http://github.com/andrewisen/dj-r
 		}
 	</script>
 
-		<!-- CDNs -->
+	<!-- CDNs -->
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
