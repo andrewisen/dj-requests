@@ -19,7 +19,10 @@ Clone repo.
 * Upload the content to your FTP or 
 * Run it locally with [Docker](https://docker.com):
 ```docker run --name dj-requests -v `pwd`/app:/var/www/html -p 9000:80 -d php:7.2-apache```    
-The site is now running at [http://localhost:9000](http://localhost:9000). Useful commands after running the container:    
+The site is now running at [http://localhost:9000](http://localhost:9000).    
+
+## Developing
+Useful commands after running the container:    
 * `docker stop dj-requests` to stop the instance.
 * `docker start dj-requests` to start the instance (useful if you ever reboot you computer or Docker engine).
 * `docker restart dj-requests` to restart the instance.
