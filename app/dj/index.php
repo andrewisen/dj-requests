@@ -83,7 +83,6 @@
 					while ($line = fgets($fh)) {
 						array_push($songs,$line);
 					}
-
 					fclose($fh);
 
 					// Count how many times each song/request appears
@@ -118,7 +117,6 @@
 					foreach ( $output as $song ) {
 						if ($i >= $numberOfSongsToDisplay){break;}
 
-
 						$pos = strpos($song, ":");
 						$songQuery = substr($song, $pos + 2); 
 						$songTitleArtist = substr($song, $pos + 2); 
@@ -126,8 +124,6 @@
 
 						$songQuery = str_replace(' ', '%20', $songQuery);
 						$querySong = "purgeRequest=" . $songQuery;
-						//echo '<a href="purge.php?' . $querySong . '">'. $song . "</a>" . "<br/>";
-						//echo $songTitleArtist;
 
 						echo "
 							<div class='media text-muted pt-3'>
@@ -144,19 +140,6 @@
 							</div>";
 						$i = ++$i;
 					}
-
-					/*
-					$echoArtist = "Avicii";
-					$echoTitle = "Levels";
-
-					$echoBefore = '<div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray"><div class="d-flex justify-content-between align-items-center w-100">';
-					$echoBefore1 = '<strong class="text-gray-dark">' . $echoTitle . '</strong>';
-					$echoBefore2 = '<a href="#">REQUEST</a></div></div></div><div class="media text-muted pt-3">';
-
-					$echoFull = $echoBefore . $echoBefore1 . $echoBefore2;
-					echo $echoFull;
-					*/
-
 				?>
 				<div class='media text-muted pt-3'>
 					<small class="d-block text-right mt-3">
@@ -195,113 +178,7 @@
 				</div>
 			</div>
 		</div>
-
-<!--
-
-
-
-	<div style="text-align: center;">
-    <div style="display: inline-block; text-align: left;">
-		<header></header>
-		<h1 style="font-size:4vw;">Requests</h1>
-		<div style="font-size:2vw;">
-		<?php
-			/*
-
-			// Refresh URL
-			$url1=$_SERVER['REQUEST_URI'];
-			header("Refresh: 5000; URL=$url1");
-
-			// No Cache
-			header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-			header("Cache-Control: post-check=0, pre-check=0", false);
-			header("Pragma: no-cache");
-
-			$songs = array();
-			$output = array();
-
-			// Open request file and store each line (i.e. each song) in an array
-			$fh = fopen('requests.txt','r');
-			while ($line = fgets($fh)) {
-				array_push($songs,$line);
-			}
-
-			fclose($fh);
-
-			// Count how many times each song/request appears
-			foreach ($songs as &$song) {
-				$tempSong = "";
-				$tmp = array_count_values($songs);
-				$cnt = $tmp[$song]; // cnt count
-
-				$tempSong .= $cnt . ": " .$song;
-				array_push($output,$tempSong);
-			}
-			
-			// Remove duplicates
-			$output = array_unique($output);
-
-			// Sort decending
-			rsort($output);
-
-			// Break the references
-			unset($value); 
-			unset($song);
-
-
-
-			// Print each song
-			// Template: 	"[# of requests]: [Artist] - [Title]""
-			// Example: 	"3: Avicci - Levels"
-
-			// Each purge request gets formated into a query format
-			// IN: 	"3: Avicci - Levels"
-			// OUT:	"Avicii%20-%20Levels"
-			foreach ( $output as $song ) {
-				///// DEBUG /////
-				// echo $line . "<br/>";
-				#<a href="requests.php?' + serializeOutputTxt + '">' + "Request" +'</a>'
-
-				//echo '<a href="#">' . $line . "</a>" . "<br/>";
-				// echo $line . "<br/>";
-				///// DEBUG /////
-
-				$pos = strpos($song, ":");
-				$songQuery = substr($song, $pos + 2); 
-
-				$songQuery = str_replace(' ', '%20', $songQuery);
-				$querySong = "purgeRequest=" . $songQuery;
-				echo '<a href="purge.php?' . $querySong . '">'. $song . "</a>" . "<br/>";
-
-			}
-
-			// clearTxt = Purge all
-			function clearTxt(){
-				$fh = fopen('requests.txt','w');
-				fclose($fh);
-				header("Refresh:0");
-			}
-
-			if(array_key_exists('purgeRequests',$_POST)){
-				clearTxt();
-			}
-			*/
-		?>
-		</div>
-		<br><br>
-		<div>
-			<form method="post">
-				<input type="submit" name="purgeRequests" id="purgeRequests" value="Purge" /><br/>
-			</form>
-			<br>
-			<form action="../">
-				<input type="submit" value="Back" />
-			</form>
-		</div>
-	</div>
-	</div>
--->
-
+		
 		<!-- CDNs -->
 		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
