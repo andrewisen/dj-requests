@@ -7,4 +7,4 @@ deploy:
   only:
     - master
   script:
-    - lftp -u $ftp_username,$ftp_password -e "mirror -R app .;quit" $ftp_servername
+    - lftp -u $ftp_username,$ftp_password -e "mirror -n -R app .;quit" $ftp_servername
