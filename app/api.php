@@ -14,6 +14,43 @@ ini_set('display_errors', 'on');
 echo time();
 echo "<br>";
 
+function debugToConsole($data) {
+  /**
+  * Writes input data to browser's console
+  *
+  * @see https://stackoverflow.com/a/20147885
+  * @param string|array $data
+  * @return string 
+  */
+ 
+  $output = $data;
+  if (is_array($output))
+    $output = implode(',', $output);
+
+  echo "<script>console.log('" . $output . "' );</script>";
+}
+
+function getSpotifyCredentials($path=null){
+  /**
+  * Writes input data to browser's console
+  *
+  * @see https://stackoverflow.com/a/20147885
+  * @param string $data 
+  * @return string client_id:client_secret
+  */
+  if (null === $path) {
+    $path = ".auth";
+  }
+
+  debugToConsole("Looking for auth in: " . $path);
+
+  
+  $authFile = fopen($path, "r") or die("Unable to open authentication file!");
+  echo fgets($authFile);
+  fclose($$authFile);
+  */
+}
+
 function spotifyRequest($url,$method,$headers){
   /**
   * Does a HTTP simple reqeust with authentication.
@@ -34,6 +71,7 @@ $method = "POST";
 $headers = array();
 
 spotifyRequest($url,$method,$headers);
+getSpotifyCredentials("pathToFile");
 
 
 
