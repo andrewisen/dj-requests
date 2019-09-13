@@ -16,7 +16,7 @@ echo "<br>";
 
 function debugToConsole($data) {
   /**
-  * Writes input data to browser's console
+  * Write debug to client's browser
   *
   * @see https://stackoverflow.com/a/20147885
   * @param string|array $data
@@ -32,12 +32,12 @@ function debugToConsole($data) {
 
 function getSpotifyCredentials($path=null){
   /**
-  * Writes input data to browser's console
+  * Reads Spotify Crendials, formatted as one sting,i.e. "client_id:client_secret".
   *
-  * @see https://stackoverflow.com/a/20147885
-  * @param string $data 
+  * @param string $path
   * @return string client_id:client_secret
   */
+
   if (null === $path) {
     $path = ".auth";
   }
@@ -49,6 +49,38 @@ function getSpotifyCredentials($path=null){
   fclose($authFile);
 
   return $spotifyCredentials;
+}
+
+function explodeSpotifyCredentials($spotifyCredentials,$explodeTarget=null){
+  /**
+  * Explode Spotify Crendials.
+  *
+  * @param var $spotifyCredentials
+  * @param string $spotifyCredentials
+  * @return string client_id or client_secret
+  */
+  
+  if (null === $explodeTarget) {
+    $output = null;
+    exit("Please provide $spotifyCredentials");
+  }
+
+  $spotifyCredentials = explode(":",$spotifyCredentials);
+  $client_id = $spotifyCredentials[0];
+  $client_secret = $spotifyCredentials[1];
+
+  debugToConsole("Client ID: " . $client_id);
+  debugToConsole("Client Secret: " . $client_secret);
+
+  if ($explodeTarget == "client_id") {
+    $output = $client_id;
+  } elseif ($explodeTarget == "client_secret") {
+    $output = $client_secret;
+  } else {
+    $output = null;
+  }
+
+  return $output;
 }
 
 function spotifyRequest($url,$method,$headers){
@@ -66,12 +98,10 @@ function spotifyRequest($url,$method,$headers){
 
 $spotifyCredentials = getSpotifyCredentials();
 
-//$spotifyCredentials = explode(":",$spotifyCredentials);
-//$client_id = $spotifyCredentials[0];
-//$client_secret = $spotifyCredentials[1];
-
-//debugToConsole("Client ID: " . $client_id);
-//debugToConsole("Client Secret: " . $client_secret);
+$client_id = explodeSpotifyCredentials($spotifyCredentials,"client_id");
+$client_secret = explodeSpotifyCredentials($spotifyCredentials,"client_secret");
+echo $client_id;
+echo $client_secret;
 
 $base = "https://accounts.spotify.com/";
 $source = "api/token";
