@@ -12,5 +12,14 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 'on');
 
+$base = "https://accounts.spotify.com/";
+$source = "api/token";
+$url = $base . $source;
+
+private function spotifyRequest($url,$method,$headers){
+    echo "$fname Refsnes.<br>";
+}
+
+
 
 ?>
