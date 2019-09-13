@@ -152,14 +152,22 @@ $spotifyCredentials = getSpotifyCredentials();
 $accessToken = getAccessToken($spotifyCredentials);
 echo "DEV, AccessToken: " . $accessToken . "<br>" . "<br>";
 
-$jsonResponse = getSearchResults($accessToken,"Levels","track");
+$q = $_GET['q'];
+$jsonResponse = getSearchResults($accessToken,$q,"track");
 $tracks = $jsonResponse["tracks"];
 $tracks = $tracks["items"];
 
 
 foreach ($tracks as $track){
-    echo $track["name"] . "<br>";
-}
+    $artists = $track["artists"];
+    $artistArray = array();
+    foreach ($artists as $artist){ 
+      $artistArray[] = $artist["name"]; 
+    }
+    $artist = implode(' & ', $artistArray);
+    $track = $track["name"];
 
+    echo $artist . " - " . $track . "<br>";
+}
 
 ?>
