@@ -11,14 +11,31 @@
 // Debug
 error_reporting(E_ALL);
 ini_set('display_errors', 'on');
+echo time();
+echo "<br>";
+
+function spotifyRequest($url,$method,$headers){
+  /**
+  * Does a HTTP simple reqeust with authentication.
+  *
+  * Returns the image resource or false on failure.
+  * @param string $url
+  * @param string $method
+  * @param array $headers
+  * @return string The image resource or false on failure.
+  */
+    echo "$url . <br>";
+}
 
 $base = "https://accounts.spotify.com/";
 $source = "api/token";
 $url = $base . $source;
+$method = "POST";
+$headers = array();
 
-private function spotifyRequest($url,$method,$headers){
-    echo "$fname Refsnes.<br>";
-}
+spotifyRequest($url,$method,$headers);
+
+
 
 
 
