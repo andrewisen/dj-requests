@@ -1,17 +1,17 @@
 <?php
-/*
+/**
   * Makes a remote HTTP request and returns the response.
   *
   * @author    André Wisén & Arvid Viderberg
   *
-  * Credit: https://girders.org/2018/07/php-guide-to-http-api-requests.html
-  * More info: https://developer.spotify.com/documentation/general/guides/authorization-guide/#authorization-code-flow
+  * @see https://girders.org/2018/07/php-guide-to-http-api-requests.html
+  * @see https://developer.spotify.com/documentation/general/guides/authorization-guide/#authorization-code-flow
 */
 
 // Debug
 error_reporting(E_ALL);
 ini_set('display_errors', 'on');
-echo time();
+echo "The time is: ".time();
 echo "<br>";
 
 function debugToConsole($data) {
@@ -20,7 +20,7 @@ function debugToConsole($data) {
   *
   * @see https://stackoverflow.com/a/20147885
   * @param string|array $data
-  * @return string 
+  * @return string
   */
  
   $output = $data;
@@ -43,12 +43,12 @@ function getSpotifyCredentials($path=null){
   }
 
   debugToConsole("Looking for auth in: " . $path);
-
   
   $authFile = fopen($path, "r") or die("Unable to open authentication file!");
-  echo fgets($authFile);
-  fclose($$authFile);
-  */
+  $spotifyCredentials = fgets($authFile);
+  fclose($authFile);
+
+  return $spotifyCredentials;
 }
 
 function spotifyRequest($url,$method,$headers){
@@ -59,22 +59,28 @@ function spotifyRequest($url,$method,$headers){
   * @param string $url
   * @param string $method
   * @param array $headers
-  * @return string The image resource or false on failure.
+  * @return array JSON Response
   */
     echo "$url . <br>";
 }
+
+$spotifyCredentials = getSpotifyCredentials();
+
+//$spotifyCredentials = explode(":",$spotifyCredentials);
+//$client_id = $spotifyCredentials[0];
+//$client_secret = $spotifyCredentials[1];
+
+//debugToConsole("Client ID: " . $client_id);
+//debugToConsole("Client Secret: " . $client_secret);
 
 $base = "https://accounts.spotify.com/";
 $source = "api/token";
 $url = $base . $source;
 $method = "POST";
 $headers = array();
+$headers[] = "Content-Type: application/x-www-form-urlencoded";
+$headers[] = "Authorization: Basic " . base64_encode($spotifyCredentials);
 
 spotifyRequest($url,$method,$headers);
-getSpotifyCredentials("pathToFile");
-
-
-
-
 
 ?>
