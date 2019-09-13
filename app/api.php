@@ -80,7 +80,7 @@ function explodeSpotifyCredentials($spotifyCredentials,$explodeTarget=null){
   return $output;
 }
 
-function spotifyRequest($url,$method,$body,$headers){
+function spotifyRequest($url,$method,$body=null,$headers){
   /**
   * Does a HTTP simple reqeust with authentication.
   *
@@ -91,11 +91,18 @@ function spotifyRequest($url,$method,$body,$headers){
   * @return array JSON Response
   */
 
-  $opt = array('http'=>array(
+  if (null == $body) {
+      $opt = array('http'=>array(
        'method' => $method,
        'header' => implode("\r\n", $headers), // N.B: If error, try PHP_EOL
-       'content' => http_build_query($body)
        ));
+  } else {
+    $opt = array('http'=>array(
+         'method' => $method,
+         'header' => implode("\r\n", $headers), // N.B: If error, try PHP_EOL
+         'content' => http_build_query($body)
+         ));
+  }
 
   $context = stream_context_create($opt);
   $response = file_get_contents($url, false, $context);
@@ -120,11 +127,39 @@ function getAccessToken($spotifyCredentials){
   return $accessToken;
 }
 
+function getSearchResults($accessToken,$searchQuery,$searchType){
+  $base = "https://api.spotify.com/";
+  $source = "v1/search";
+  $url = $base . $source . "?q=" . $searchQuery . "&type=" . $searchType;
+
+  $body = array(""=>"");
+
+  $method = "GET";
+
+  $headers = array();
+  $headers[] = "Accept: application/json";
+  $headers[] = "Content-Type: application/json";
+  $headers[] = "Authorization: Bearer " . $accessToken;
+
+  $jsonResponse = spotifyRequest($url,$method,null,$headers);
+  return $jsonResponse; 
+}
+
 $spotifyCredentials = getSpotifyCredentials();
 // $client_id = explodeSpotifyCredentials($spotifyCredentials,"client_id");
 // $client_secret = explodeSpotifyCredentials($spotifyCredentials,"client_secret");
 
 $accessToken = getAccessToken($spotifyCredentials);
-print_r($accessToken);
+echo "DEV, AccessToken: " . $accessToken . "<br>" . "<br>";
+
+$jsonResponse = getSearchResults($accessToken,"Levels","track");
+$tracks = $jsonResponse["tracks"];
+$tracks = $tracks["items"];
+
+
+foreach ($tracks as $track){
+    echo $track["name"] . "<br>";
+}
+
 
 ?>
