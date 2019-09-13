@@ -69,9 +69,6 @@ function explodeSpotifyCredentials($spotifyCredentials,$explodeTarget=null){
   $client_id = $spotifyCredentials[0];
   $client_secret = $spotifyCredentials[1];
 
-  debugToConsole("Client ID: " . $client_id);
-  debugToConsole("Client Secret: " . $client_secret);
-
   if ($explodeTarget == "client_id") {
     $output = $client_id;
   } elseif ($explodeTarget == "client_secret") {
@@ -83,7 +80,7 @@ function explodeSpotifyCredentials($spotifyCredentials,$explodeTarget=null){
   return $output;
 }
 
-function spotifyRequest($url,$method,$headers){
+function spotifyRequest($url,$method,$body,$headers){
   /**
   * Does a HTTP simple reqeust with authentication.
   *
@@ -93,24 +90,41 @@ function spotifyRequest($url,$method,$headers){
   * @param array $headers
   * @return array JSON Response
   */
-    echo "$url . <br>";
+
+  $opt = array('http'=>array(
+       'method' => $method,
+       'header' => implode("\r\n", $headers), // N.B: If error, try PHP_EOL
+       'content' => http_build_query($body)
+       ));
+
+  $context = stream_context_create($opt);
+  $response = file_get_contents($url, false, $context);
+  $jsonResponse = json_decode($response,true);
+
+  return $jsonResponse;
+}
+
+function getAccessToken($spotifyCredentials){
+  $base = "https://accounts.spotify.com/";
+  $source = "api/token";
+  $url = $base . $source;
+  $body = array("grant_type"=>"client_credentials");
+  $method = "POST";
+
+  $headers = array();
+  $headers[] = "Content-Type: application/x-www-form-urlencoded";
+  $headers[] = "Authorization: Basic " . base64_encode($spotifyCredentials);
+
+  $jsonResponse = spotifyRequest($url,$method,$body,$headers);
+  $accessToken = $jsonResponse["access_token"];
+  return $accessToken;
 }
 
 $spotifyCredentials = getSpotifyCredentials();
+// $client_id = explodeSpotifyCredentials($spotifyCredentials,"client_id");
+// $client_secret = explodeSpotifyCredentials($spotifyCredentials,"client_secret");
 
-$client_id = explodeSpotifyCredentials($spotifyCredentials,"client_id");
-$client_secret = explodeSpotifyCredentials($spotifyCredentials,"client_secret");
-echo $client_id;
-echo $client_secret;
-
-$base = "https://accounts.spotify.com/";
-$source = "api/token";
-$url = $base . $source;
-$method = "POST";
-$headers = array();
-$headers[] = "Content-Type: application/x-www-form-urlencoded";
-$headers[] = "Authorization: Basic " . base64_encode($spotifyCredentials);
-
-spotifyRequest($url,$method,$headers);
+$accessToken = getAccessToken($spotifyCredentials);
+print_r($accessToken);
 
 ?>
