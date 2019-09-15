@@ -1,0 +1,7 @@
+{
+	"description":"General description",
+	"dbname":"MyDatabaseName",
+	"servername":"localhost",
+	"username":"admin",
+	"password":"pass123"
+}

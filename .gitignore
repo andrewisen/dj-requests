@@ -1,3 +1,4 @@
 *.DS_Store
 app/dj/requests.txt
 app/.auth
+app/.database

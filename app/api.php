@@ -316,17 +316,31 @@ You can clone or fork this project on <a href="http://github.com/andrewisen/dj-r
         foreach ($artists as $artist){ 
           $artistArray[] = $artist["name"]; 
         }
+
         $artist = implode(' & ', $artistArray);
+        $id = $track["id"];
         $track = $track["name"];
+       
 
         $outputString = $artist . " - " . $track;
         //$outputString = $track . " by " . $artist; // Alternative format
 
+        /*
         $requestURL = array(
           "songRequest" => $outputString
         );
+        */
+
+        $requestURL = array(
+          "id" => $id,
+          "artist" => $artist,
+          "title" => $track,
+        );
+
+
+
         $requestURL = http_build_query($requestURL);
-        $requestURL = "requests.php?" . $requestURL;
+        $requestURL = "?" . $requestURL;
 
         $outputString = "<a href='" . $requestURL . "'>" . $outputString . "</a>";
         $output = $output . $outputString . "<br>";
@@ -339,7 +353,9 @@ You can clone or fork this project on <a href="http://github.com/andrewisen/dj-r
     * Main function
     */
 
+
     $q = $_POST['searchTxt'];
+    echo "NUll: " . $q;
 
     $spotifyCredentials = getSpotifyCredentials();
     $accessToken = getAccessToken($spotifyCredentials);
@@ -352,6 +368,7 @@ You can clone or fork this project on <a href="http://github.com/andrewisen/dj-r
     /* Exploded Spotify credentials
     * echo "Your AccessToken: " . $accessToken . "<br>" . "<br>";
     */
+    echo "Your AccessToken: " . $accessToken . "<br>" . "<br>";
 
     $jsonResponse = getSearchResults($accessToken,$q,"track");
     $tracks = $jsonResponse["tracks"];
@@ -367,6 +384,68 @@ You can clone or fork this project on <a href="http://github.com/andrewisen/dj-r
 
   // Main
   if(!empty($_POST)){
+    echo "BEGIN";
     main();
+  }
+  if(!empty($_GET)){
+    $id = $_GET['id'];
+    $artist = $_GET['artist'];
+    $title = $_GET['title'];
+    requestSong($id,$artist,$title);
+  }
+
+  function requestSong($id,$artist,$title){
+    $dbPath = ".database";
+    $dbStr = file_get_contents($dbPath) or die("Unable to open authentication file!");
+    $db = json_decode($dbStr, true);
+
+    $db_servername = $db["servername"];
+    $db_name = $db["dbname"];
+    $db_table = "request_test";
+    $db_username = $db['username'];
+    $db_password = $db["password"];
+
+    // Create connection
+    $conn = mysqli_connect($db_servername, $db_username, $db_password,$db_name);
+    $conn->set_charset("utf8");
+
+    if (!$conn) {
+      die("Connection failed: " . mysqli_connect_error());
+    } else {
+      debugToConsole("MySQL connected successfully");
+    }
+    
+    $sqlCheckIfExists = "SELECT * FROM request_test WHERE id = '" . $id . "'";
+    $result = $conn->query($sqlCheckIfExists);
+    $data = $result->fetch_assoc();
+
+    if ($data == NULL){
+      addRecord($conn,$db_table,$id,$artist,$title);
+    } else {
+      $requests = $data["requests"];
+      $requests = $requests + 1;
+      updateRecord($conn,$db_table,$id,$requests);
+    }
+  }
+
+  function addRecord($conn,$db_table,$id,$artist,$title){
+    $sql = "INSERT INTO " . $db_table . " (id, artist, title, requests) VALUES ('" . $id . "', '" . $artist . "', '" . $title . "', 1)";
+    // RECORD ADD
+    if ($conn->query($sql) === TRUE) {
+      debugToConsole("New record created successfully");
+    } else {
+      debugToConsole("Error: " . $sql . "<br>" . $conn->error);
+    }
+  }
+
+  function updateRecord($conn,$db_table,$id,$requests){
+    $sqlUpdate = "UPDATE request_test SET requests=99 WHERE id='123'";
+    $sql = "UPDATE " . $db_table . " SET requests=" . $requests . " WHERE id='" . $id . "'";
+
+    if ($conn->query($sql) === TRUE) {
+      debugToConsole("New update created successfully");
+    } else {
+      debugToConsole("Error: " . $sql . "<br>" . $conn->error);
+    }
   }
 ?>
