@@ -368,7 +368,6 @@ You can clone or fork this project on <a href="http://github.com/andrewisen/dj-r
     /* Exploded Spotify credentials
     * echo "Your AccessToken: " . $accessToken . "<br>" . "<br>";
     */
-    echo "Your AccessToken: " . $accessToken . "<br>" . "<br>";
 
     $jsonResponse = getSearchResults($accessToken,$q,"track");
     $tracks = $jsonResponse["tracks"];
