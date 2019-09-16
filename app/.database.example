@@ -3,5 +3,8 @@
 	"dbname":"MyDatabaseName",
 	"servername":"localhost",
 	"username":"admin",
-	"password":"pass123"
+	"password":"pass123",
+	"requestTable":"request_test",
+	"playTable":"play_test"
+}
 }
