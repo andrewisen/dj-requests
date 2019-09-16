@@ -186,3 +186,35 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/holder/2.9.6/holder.js"></script>
 	</body>
 </html>
+<?
+function main(){
+    /**
+    * Connects to DB and prepare SQL
+    *
+    * @param string $id
+    * @param string $artist
+    * @param string $title
+    */
+
+    $dbPath = "../.database";
+    $dbStr = file_get_contents($dbPath) or die("Unable to open database file!");
+    $db = json_decode($dbStr, true); 
+    $db_servername = $db["servername"];
+    $db_name = $db["dbname"];
+    $db_table = "request_test";
+    $db_username = $db['username'];
+    $db_password = $db["password"];
+
+    // Create DB connection
+    $conn = mysqli_connect($db_servername, $db_username, $db_password,$db_name);
+    $conn->set_charset("utf8");
+
+    if (!$conn){
+      die("Connection failed: " . mysqli_connect_error());
+    } else {
+      debugToConsole("MySQL connected successfully");
+    }
+  }
+main();
+
+?>
