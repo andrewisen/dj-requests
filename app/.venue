@@ -1,0 +1,36 @@
+{
+  "dancefloors": [
+      {
+        "name": "Main Stage",
+        "desc": "The main dancefloor",
+        "genre": "House, Mainstream",
+        "id": "dancefloor01",
+        "img": "img/dancefloor01.jpg"
+        },
+        {
+        "name": "The Roof",
+        "desc": "Shake your booty on the roofy",
+        "genre": "HipHop, RnB, Raggaeton",
+        "id": "dancefloor02",
+        "img": "img/dancefloor02.jpg"
+  		},
+  		{
+        "name": "The Hole",
+        "desc": "This is Berlin calling",
+        "genre": "Techno, Tech-House, Underground",
+        "id": "dancefloor03",
+        "img": "img/dancefloor03.jpg"
+  		},
+  		{
+        "name": "Pub",
+        "desc": "Sing-along at the pub",
+        "genre": "Oldies, Top40, Guilty Pleassures",
+        "id": "dancefloor04",
+        "img": "img/dancefloor04.jpg"
+  		}
+  ],
+  "name": "East West Night Club",
+  "description": "We are the East West Night Club<br>Enjoy the latest and greatest under one roof!",
+  "opening": "22:00",
+  "closing": "03:00"
+}
