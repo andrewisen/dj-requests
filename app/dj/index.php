@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>DJ Request(er)</title>
+		<title>DJ Requests - Admin Page</title>
 		<meta name="description" content="DJ requester">
 		<meta name="author" content="Arvid & André">
 		<meta charset="UTF-8">
@@ -74,76 +74,8 @@
 		<main role="main" class="container" style="padding-top: 30px;">
 			<div class="my-3 p-3 bg-white rounded box-shadow">
 				<h6 class="border-bottom border-gray pb-2 mb-0">Requests</h6>
+				<!-- REQUESTS -->
 				<div id="echoRequests"></div>
-				<?php
-					/*
-					$songs = array();
-					$output = array();
-
-					// Open request file and store each line (i.e. each song) in an array
-					$fh = fopen('requests.txt','r');
-					while ($line = fgets($fh)) {
-						array_push($songs,$line);
-					}
-					fclose($fh);
-
-					// Count how many times each song/request appears
-					foreach ($songs as &$song) {
-						$tempSong = "";
-						$tmp = array_count_values($songs);
-						$cnt = $tmp[$song]; // cnt count
-
-						$tempSong .= $cnt . ": " .$song;
-						array_push($output,$tempSong);
-					}
-
-					// Remove duplicates
-					$output = array_unique($output);
-
-					// Sort decending
-					rsort($output);
-
-					// Break the references
-					unset($value); 
-					unset($song);
-
-					$numberOfSongsToDisplay = $_GET['numberOfSongsToDisplay'];
-
-					if (ctype_digit($numberOfSongsToDisplay)){
-						$numberOfSongsToDisplay = $numberOfSongsToDisplay;
-					}else{
-						$numberOfSongsToDisplay = 3;
-					}
-
-					$i=0;
-					foreach ( $output as $song ) {
-						if ($i >= $numberOfSongsToDisplay){break;}
-
-						$pos = strpos($song, ":");
-						$songQuery = substr($song, $pos + 2); 
-						$songTitleArtist = substr($song, $pos + 2); 
-						$noOfRequests = substr($song, 0, $pos); 
-
-						$songQuery = str_replace(' ', '%20', $songQuery);
-						$querySong = "purgeRequest=" . $songQuery;
-
-						echo "
-							<div class='media text-muted pt-3'>
-								<div class='media-body pb-3 mb-0 small lh-125 border-bottom border-gray'> 
-									<div class='d-flex justify-content-between align-items-center w-100'>
-										<strong class='text-gray-dark'>
-											$songTitleArtist ($noOfRequests) 
-										</strong>
-										<a href='purge.php? $querySong'>
-											REMOVE
-										</a>
-									</div>
-								</div>
-							</div>";
-						$i = ++$i;
-					}
-					*/
-				?>
 				<div class='media text-muted pt-3'>
 					<small class="d-block text-right mt-3">
 						<a href="?numberOfSongsToDisplay=100">All Requests</a>
@@ -278,8 +210,6 @@
 				"<div>" . $play . " // (" . $remove . ")</div>" .
 				"</div></div></div><br>";
 				$i = ++$i;
-
-				//echo $row["artist"]. " - " . $row["title"] . " (" . $row["requests"]. ")" . " " . $remove . " ". $play . "<br>";
 			}
 			echo "<script>" . 'document.getElementById("echoRequests").innerHTML = "' . $output . '";' . "</script>";
 		} else {
@@ -336,4 +266,5 @@
 	}
 
   	main();
+  	
 ?>
