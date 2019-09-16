@@ -187,34 +187,120 @@
 	</body>
 </html>
 <?
-function main(){
+  function debugToConsole($data) {
     /**
-    * Connects to DB and prepare SQL
+    * Write debug to client's browser
     *
-    * @param string $id
-    * @param string $artist
-    * @param string $title
+    * @see https://stackoverflow.com/a/20147885
+    * @param string|array $data
+    * @return string
     */
+   
+    $output = $data;
+    if (is_array($output))
+      $output = implode(',', $output);
 
-    $dbPath = "../.database";
-    $dbStr = file_get_contents($dbPath) or die("Unable to open database file!");
-    $db = json_decode($dbStr, true); 
-    $db_servername = $db["servername"];
-    $db_name = $db["dbname"];
-    $db_table = "request_test";
-    $db_username = $db['username'];
-    $db_password = $db["password"];
-
-    // Create DB connection
-    $conn = mysqli_connect($db_servername, $db_username, $db_password,$db_name);
-    $conn->set_charset("utf8");
-
-    if (!$conn){
-      die("Connection failed: " . mysqli_connect_error());
-    } else {
-      debugToConsole("MySQL connected successfully");
-    }
+    echo "<script>console.log('" . $output . "' );</script>";
   }
-main();
 
+	function main(){
+		/**
+		* Connects to DB and prepare SQL
+		*
+		* @param string $id
+		* @param string $artist
+		* @param string $title
+		*/
+
+
+		$dbPath = "../.database";
+		$dbStr = file_get_contents($dbPath) or die("Unable to open database file!");
+		$db = json_decode($dbStr, true); 
+		$db_servername = $db["servername"];
+		$db_name = $db["dbname"];
+		$db_username = $db['username'];
+		$db_password = $db["password"];
+		$db_requestTable = $db["requestTable"];
+		$db_playTable = $db["playTable"];
+
+		// Create DB connection
+		$conn = mysqli_connect($db_servername, $db_username, $db_password,$db_name);
+		$conn->set_charset("utf8");
+
+		if (!$conn){
+		  die("Connection failed: " . mysqli_connect_error());
+		  echo "NOT OK";
+		} else {
+		  debugToConsole("MySQL connected successfully");
+		}
+
+		$sqlCheckIfSongExists = "SELECT * FROM " . $db_requestTable;
+	    $result = $conn->query($sqlCheckIfSongExists);
+		if ($result->num_rows > 0) {
+			// output data of each row
+			while($row = $result->fetch_assoc()) {
+				$removeURL = "?remove=" . $row["id"]; 
+				$remove = '<a href="' . $removeURL . '">REMOVE</a>';
+				
+				$playURL = "?play=" . $row["id"];
+				$playURL = $playURL  . "&artist=" . $row["artist"]; 
+				$playURL = $playURL . "&title=" . $row["title"]; 
+				$play = '<a href="' . $playURL . '">PLAY</a>';
+
+				echo $row["artist"]. " - " . $row["title"] . " (" . $row["requests"]. ")" . " " . $remove . " ". $play . "<br>";
+			}
+		} else {
+			echo "0 results";
+		}
+
+		if(!empty($_GET)){
+			$removeURI = $_GET['remove'];
+			$playURI = $_GET['play'];
+
+			if ($playURI != NULL){
+				playSong($conn, $db_playTable,$playURI,$db_requestTable);
+			} elseif ($removeURI != NULL) {
+				removeSong($conn, $db_requestTable, $removeURI);
+			}
+		}
+	}
+
+	function playSong($conn, $db_playTable,$id,$db_requestTable){
+		echo "Playing: " . $id;
+		$venue = "Nymble";
+		$dancefloor = "Gröten";
+		$artist = $_GET['artist'];
+		$title = $_GET['title'];
+		$artist = str_replace("'","''",$artist);
+		$title = str_replace("'","''",$title);
+
+		date_default_timezone_set("Europe/Stockholm");
+		$time = time();
+
+		$sql = "INSERT INTO " . $db_playTable . " (time,id, artist, title, venue, dancefloor) VALUES (" . $time  .",'" . $id . "', '" . $artist . "','" . $title . "','" . $venue . "', '" . $dancefloor . "')";
+
+		if ($conn->query($sql) === TRUE) {
+		  debugToConsole("Add played song");
+		} else {
+		  debugToConsole("Error: " . $sql . "<br>" . $conn->error);
+		}
+
+		removeSong($conn, $db_requestTable, $id);
+		echo "<script>window.location = 'api-dj.php';</script>";
+
+	}
+
+	function removeSong($conn, $db_table, $id){
+		echo "Removing: " . $id;
+		$sql = 'DELETE FROM ' . $db_table . ' WHERE id="' . $id . '"';
+
+		if ($conn->query($sql) === TRUE) {
+			debugToConsole("Record deleted successfully");
+		} else {
+			debugToConsole("Error deleting record: " . $conn->error);
+		}
+		echo "<script>window.location = 'api-dj.php';</script>";
+	}
+
+  	main();
 ?>

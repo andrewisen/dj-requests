@@ -27,7 +27,7 @@
   <link href="css/sticky-footer-navbar.css" type="text/css"  rel="stylesheet">
   <link href="css/search.css" type="text/css" rel="stylesheet">
 </head> 
-<body class="dj">
+<body class="dj" onload="checkStatus()">
   <main role="main" class="container">
     <div class="djSearch">
       <!-- LOGO & DESCRIPTION -->
@@ -142,6 +142,21 @@ You can clone or fork this project on <a href="http://github.com/andrewisen/dj-r
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
 </html>
+
+<script>
+
+  function checkStatus(){
+    var status =  window.location.search.substr(1);
+    if (status == "requestSent") {
+      document.getElementById("parseResponse").innerHTML = 'Thank you for your <a style="font-size:80%;color:#e83e8c;word-break:break-word;text-decoration:none;" href="#requestSongModal" data-toggle="modal" data-target="#requestSongModal">request</a>.<br><br>The DJ(s) will do his, her, or their best to play your favorite song.';
+    }
+
+    if (status == "easterEgg") {
+      document.getElementById("parseResponse").innerHTML = "You pressed the logo...<br>Congratz, you found this <code>message</code>!";
+    }
+  }
+
+</script>
 
 <?php
   /**
@@ -416,7 +431,7 @@ You can clone or fork this project on <a href="http://github.com/andrewisen/dj-r
       debugToConsole("MySQL connected successfully");
     }
     
-    $sqlCheckIfSongExists = "SELECT * FROM request_test WHERE id = '" . $id . "'";
+    $sqlCheckIfSongExists = "SELECT * FROM " . $db_table . " WHERE id = '" . $id . "'";
     $result = $conn->query($sqlCheckIfSongExists);
     $data = $result->fetch_assoc();
 
@@ -440,6 +455,10 @@ You can clone or fork this project on <a href="http://github.com/andrewisen/dj-r
     * @param string $title
     */
 
+
+    $artist = str_replace("'","''",$artist);
+    $title = str_replace("'","''",$title);
+
     $sql = "INSERT INTO " . $db_table . " (id, artist, title, requests) VALUES ('" . $id . "', '" . $artist . "', '" . $title . "', 1)";
     // RECORD ADD
     if ($conn->query($sql) === TRUE) {
@@ -447,6 +466,7 @@ You can clone or fork this project on <a href="http://github.com/andrewisen/dj-r
     } else {
       debugToConsole("Error: " . $sql . "<br>" . $conn->error);
     }
+    echo "<script>window.location = '?requestSent';</script>";
   }
 
   function updateRecord($conn,$db_table,$id,$requests){
@@ -459,7 +479,7 @@ You can clone or fork this project on <a href="http://github.com/andrewisen/dj-r
     * @param int $requests
     */
 
-    $sqlUpdate = "UPDATE request_test SET requests=99 WHERE id='123'";
+    $sqlUpdate = "UPDATE " . $db_table ." SET requests=99 WHERE id='123'";
     $sql = "UPDATE " . $db_table . " SET requests=" . $requests . " WHERE id='" . $id . "'";
 
     if ($conn->query($sql) === TRUE) {
@@ -467,14 +487,21 @@ You can clone or fork this project on <a href="http://github.com/andrewisen/dj-r
     } else {
       debugToConsole("Error: " . $sql . "<br>" . $conn->error);
     }
+    echo "<script>window.location = '?requestSent';</script>";
   }
-  
+
   // Main GET & POST functions
   if(!empty($_GET)){
     $id = $_GET['id'];
     $artist = $_GET['artist'];
     $title = $_GET['title'];
-    requestSong($id,$artist,$title);
+
+    if (($id!=NULL) && ($artist!=NULL) && ($title!=NULL)){
+      
+      requestSong($id,$artist,$title);
+
+    }
+ 
   }
   if(!empty($_POST)){
     searchSong();
