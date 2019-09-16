@@ -74,7 +74,9 @@
 		<main role="main" class="container" style="padding-top: 30px;">
 			<div class="my-3 p-3 bg-white rounded box-shadow">
 				<h6 class="border-bottom border-gray pb-2 mb-0">Requests</h6>
+				<div id="echoRequests"></div>
 				<?php
+					/*
 					$songs = array();
 					$output = array();
 
@@ -140,6 +142,7 @@
 							</div>";
 						$i = ++$i;
 					}
+					*/
 				?>
 				<div class='media text-muted pt-3'>
 					<small class="d-block text-right mt-3">
@@ -186,3 +189,151 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/holder/2.9.6/holder.js"></script>
 	</body>
 </html>
+<?
+  function debugToConsole($data) {
+    /**
+    * Write debug to client's browser
+    *
+    * @see https://stackoverflow.com/a/20147885
+    * @param string|array $data
+    * @return string
+    */
+   
+    $output = $data;
+    if (is_array($output))
+      $output = implode(',', $output);
+
+    echo "<script>console.log('" . $output . "' );</script>";
+  }
+
+	function main(){
+		/**
+		* Connects to DB and prepare SQL
+		*
+		* @param string $id
+		* @param string $artist
+		* @param string $title
+		*/
+
+
+		$dbPath = "../.database";
+		$dbStr = file_get_contents($dbPath) or die("Unable to open database file!");
+		$db = json_decode($dbStr, true); 
+		$db_servername = $db["servername"];
+		$db_name = $db["dbname"];
+		$db_username = $db['username'];
+		$db_password = $db["password"];
+		$db_requestTable = $db["requestTable"];
+		$db_playTable = $db["playTable"];
+
+		// Create DB connection
+		$conn = mysqli_connect($db_servername, $db_username, $db_password,$db_name);
+		$conn->set_charset("utf8");
+
+		if (!$conn){
+		  die("Connection failed: " . mysqli_connect_error());
+		  echo "NOT OK";
+		} else {
+		  debugToConsole("MySQL connected successfully");
+		}
+
+		$sqlCheckIfSongExists = "SELECT * FROM " . $db_requestTable;
+	    $result = $conn->query($sqlCheckIfSongExists);
+
+		$numberOfSongsToDisplay = $_GET['numberOfSongsToDisplay'];
+
+		if (ctype_digit($numberOfSongsToDisplay)){
+			$numberOfSongsToDisplay = $numberOfSongsToDisplay;
+		}else{
+			$numberOfSongsToDisplay = 3;
+		}
+
+	    $output = "";
+	    $i=0;
+
+		if ($result->num_rows > 0) {
+			// output data of each row
+			while($row = $result->fetch_assoc()) {
+				if ($i >= $numberOfSongsToDisplay){break;}
+				$removeURL = "?remove=" . $row["id"]; 
+				$remove = "<a href='" . $removeURL . "'>REMOVE</a>";
+
+			
+				$artist = str_replace("'","%27",$row["artist"]);
+				$title = str_replace("'","%27",$row["title"]);
+				
+				$playURL = "?play=" . $row["id"];
+				$playURL = $playURL  . "&artist=" . $artist; 
+				$playURL = $playURL . "&title=" . $title; 
+				$play = "<a href='" . $playURL . "'>PLAY</a>";
+
+
+
+				$output = $output . "<div class='media text-muted pt-3'>".
+				"<div class='media-body pb-3 mb-0 small lh-125 border-bottom border-gray'>".
+				"<div class='d-flex justify-content-between align-items-center w-100'>".
+				"<strong class='text-gray-dark'>".
+				$row["artist"] . " - " . $row["title"] . " (" . $row["requests"]. ")" .
+				"</strong>".
+				"<div>" . $play . " // (" . $remove . ")</div>" .
+				"</div></div></div><br>";
+				$i = ++$i;
+
+				//echo $row["artist"]. " - " . $row["title"] . " (" . $row["requests"]. ")" . " " . $remove . " ". $play . "<br>";
+			}
+			echo "<script>" . 'document.getElementById("echoRequests").innerHTML = "' . $output . '";' . "</script>";
+		} else {
+			echo "0 results";
+		}
+
+		if(!empty($_GET)){
+			$removeURI = $_GET['remove'];
+			$playURI = $_GET['play'];
+
+			if ($playURI != NULL){
+				playSong($conn, $db_playTable,$playURI,$db_requestTable);
+			} elseif ($removeURI != NULL) {
+				removeSong($conn, $db_requestTable, $removeURI);
+			}
+		}
+	}
+
+	function playSong($conn, $db_playTable,$id,$db_requestTable){
+		echo "Playing: " . $id;
+		$venue = "Nymble";
+		$dancefloor = "Gröten";
+		$artist = $_GET['artist'];
+		$title = $_GET['title'];
+		$artist = str_replace("'","''",$artist);
+		$title = str_replace("'","''",$title);
+
+		date_default_timezone_set("Europe/Stockholm");
+		$time = time();
+
+		$sql = "INSERT INTO " . $db_playTable . " (time,id, artist, title, venue, dancefloor) VALUES (" . $time  .",'" . $id . "', '" . $artist . "','" . $title . "','" . $venue . "', '" . $dancefloor . "')";
+
+		if ($conn->query($sql) === TRUE) {
+		  debugToConsole("Add played song");
+		} else {
+		  debugToConsole("Error: " . $sql . "<br>" . $conn->error);
+		}
+
+		removeSong($conn, $db_requestTable, $id);
+		echo "<script>window.location = 'index.php';</script>";
+
+	}
+
+	function removeSong($conn, $db_table, $id){
+		echo "Removing: " . $id;
+		$sql = 'DELETE FROM ' . $db_table . ' WHERE id="' . $id . '"';
+
+		if ($conn->query($sql) === TRUE) {
+			debugToConsole("Record deleted successfully");
+		} else {
+			debugToConsole("Error deleting record: " . $conn->error);
+		}
+		echo "<script>window.location = 'index.php';</script>";
+	}
+
+  	main();
+?>
