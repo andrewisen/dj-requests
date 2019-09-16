@@ -38,7 +38,6 @@
 			<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
 				<!--<a class="navbar-brand" href="#">Admin Page</a>-->
 				<a class="navbar-brand" href="#">
-					<img src="../img/logo-white-300.png" width="30" height="30" alt="">
 					Admin Page
 				</a>
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
@@ -71,14 +70,23 @@
 				</div>
 			</nav>
 		</header>
-		<main role="main" class="container" style="padding-top: 30px;">
+		<main role="main" class="container" style="padding-top: 0px;">
+		<div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded box-shadow">
+		<img class="mr-3" src="../img/logo-white-300.png" alt="" width="48" height="48">
+		<div class="lh-100">
+		<h6 class="mb-0 text-white lh-100">{Dancefloor}</h6>
+		<small>{Venue}</small>
+		</div>
+		</div>
+
 			<div class="my-3 p-3 bg-white rounded box-shadow">
 				<h6 class="border-bottom border-gray pb-2 mb-0">Requests</h6>
 				<!-- REQUESTS -->
 				<div id="echoRequests"></div>
 				<div class='media text-muted pt-3'>
 					<small class="d-block text-right mt-3">
-						<a href="?numberOfSongsToDisplay=100">All Requests</a>
+						<a href="?numberOfSongsToDisplay=100"><b>All Requests</b></a>
+						(<a href="?status=updateNow">Update Now</a>)
 					</small>
 				</div>
 			</div>
@@ -207,7 +215,7 @@
 				"<strong class='text-gray-dark'>".
 				$row["artist"] . " - " . $row["title"] . " (" . $row["requests"]. ")" .
 				"</strong>".
-				"<div>" . $play . " // (" . $remove . ")</div>" .
+				"<div><b>" . $play . "</b><br>(" . $remove . ")</div>" .
 				"</div></div></div><br>";
 				$i = ++$i;
 			}
@@ -266,5 +274,5 @@
 	}
 
   	main();
-  	
+
 ?>
