@@ -142,6 +142,7 @@ You can clone or fork this project on <a href="http://github.com/andrewisen/dj-r
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
 </html>
+
 <?php
   /**
     * Make a remote HTTP request to Spotify and return Track data based on query.
@@ -178,7 +179,8 @@ You can clone or fork this project on <a href="http://github.com/andrewisen/dj-r
 
   function getSpotifyCredentials($path=null){
     /**
-    * Reads Spotify Crendials, formatted as one sting,i.e. "client_id:client_secret".
+    * Reads Spotify Crendials, formatted as one sting.
+    * I.e. "client_id:client_secret".
     *
     * @param string $path
     * @return string client_id:client_secret
@@ -227,7 +229,8 @@ You can clone or fork this project on <a href="http://github.com/andrewisen/dj-r
 
   function spotifyRequest($url,$method,$body=null,$headers){
     /**
-    * Does a HTTP simple reqeust with authentication.
+    * Make a simple HTTP reqeust with authentication.
+    * Built for connecting to Spotify's WEB API.
     *
     * Returns the image resource or false on failure.
     * @param string $url
@@ -256,6 +259,14 @@ You can clone or fork this project on <a href="http://github.com/andrewisen/dj-r
   }
 
   function getAccessToken($spotifyCredentials){
+    /**
+    * The Client Credentials flow is used in server-to-server authentication.
+    * Only endpoints that do not access user information can be accessed.
+    * 
+    * See: Client Credentials Flow
+    * @see https://developer.spotify.com/documentation/general/guides/authorization-guide/
+    */
+
     $base = "https://accounts.spotify.com/";
     $source = "api/token";
     $url = $base . $source;
@@ -309,6 +320,7 @@ You can clone or fork this project on <a href="http://github.com/andrewisen/dj-r
     * @param array $tracks
     * @return string 
     */
+
     $output = '';
     foreach ($tracks as $track){
         $artists = $track["artists"];
@@ -319,22 +331,16 @@ You can clone or fork this project on <a href="http://github.com/andrewisen/dj-r
 
         $artist = implode(' & ', $artistArray);
         $id = $track["id"];
-        $track = $track["name"];
+        $title = $track["name"];
        
 
-        $outputString = $artist . " - " . $track;
+        $outputString = $artist . " - " . $title;
         //$outputString = $track . " by " . $artist; // Alternative format
-
-        /*
-        $requestURL = array(
-          "songRequest" => $outputString
-        );
-        */
 
         $requestURL = array(
           "id" => $id,
           "artist" => $artist,
-          "title" => $track,
+          "title" => $title,
         );
 
 
@@ -348,9 +354,10 @@ You can clone or fork this project on <a href="http://github.com/andrewisen/dj-r
     return $output;
   }
 
-  function main(){
+  function searchSong(){
     /**
-    * Main function
+    * Main search function
+    * Echo data to <div>
     */
 
     $q = $_POST['searchTxt'];
@@ -381,40 +388,36 @@ You can clone or fork this project on <a href="http://github.com/andrewisen/dj-r
     '";</script>';
   }
 
-  // Main
-  if(!empty($_POST)){
-    main();
-  }
-  if(!empty($_GET)){
-    $id = $_GET['id'];
-    $artist = $_GET['artist'];
-    $title = $_GET['title'];
-    requestSong($id,$artist,$title);
-  }
-
   function requestSong($id,$artist,$title){
-    $dbPath = ".database";
-    $dbStr = file_get_contents($dbPath) or die("Unable to open authentication file!");
-    $db = json_decode($dbStr, true);
+    /**
+    * Connects to DB and prepare SQL
+    *
+    * @param string $id
+    * @param string $artist
+    * @param string $title
+    */
 
+    $dbPath = ".database";
+    $dbStr = file_get_contents($dbPath) or die("Unable to open database file!");
+    $db = json_decode($dbStr, true); 
     $db_servername = $db["servername"];
     $db_name = $db["dbname"];
     $db_table = "request_test";
     $db_username = $db['username'];
     $db_password = $db["password"];
 
-    // Create connection
+    // Create DB connection
     $conn = mysqli_connect($db_servername, $db_username, $db_password,$db_name);
     $conn->set_charset("utf8");
 
-    if (!$conn) {
+    if (!$conn){
       die("Connection failed: " . mysqli_connect_error());
     } else {
       debugToConsole("MySQL connected successfully");
     }
     
-    $sqlCheckIfExists = "SELECT * FROM request_test WHERE id = '" . $id . "'";
-    $result = $conn->query($sqlCheckIfExists);
+    $sqlCheckIfSongExists = "SELECT * FROM request_test WHERE id = '" . $id . "'";
+    $result = $conn->query($sqlCheckIfSongExists);
     $data = $result->fetch_assoc();
 
     if ($data == NULL){
@@ -427,6 +430,16 @@ You can clone or fork this project on <a href="http://github.com/andrewisen/dj-r
   }
 
   function addRecord($conn,$db_table,$id,$artist,$title){
+    /**
+    * Add song request to table
+    *
+    * @param object $conn
+    * @param string $db_table
+    * @param string $id
+    * @param string $artist
+    * @param string $title
+    */
+
     $sql = "INSERT INTO " . $db_table . " (id, artist, title, requests) VALUES ('" . $id . "', '" . $artist . "', '" . $title . "', 1)";
     // RECORD ADD
     if ($conn->query($sql) === TRUE) {
@@ -437,6 +450,15 @@ You can clone or fork this project on <a href="http://github.com/andrewisen/dj-r
   }
 
   function updateRecord($conn,$db_table,$id,$requests){
+    /**
+    * Update requests value (=+ 1)
+    *
+    * @param object $conn
+    * @param string $db_table
+    * @param string $id
+    * @param int $requests
+    */
+
     $sqlUpdate = "UPDATE request_test SET requests=99 WHERE id='123'";
     $sql = "UPDATE " . $db_table . " SET requests=" . $requests . " WHERE id='" . $id . "'";
 
@@ -445,5 +467,16 @@ You can clone or fork this project on <a href="http://github.com/andrewisen/dj-r
     } else {
       debugToConsole("Error: " . $sql . "<br>" . $conn->error);
     }
+  }
+  
+  // Main GET & POST functions
+  if(!empty($_GET)){
+    $id = $_GET['id'];
+    $artist = $_GET['artist'];
+    $title = $_GET['title'];
+    requestSong($id,$artist,$title);
+  }
+  if(!empty($_POST)){
+    searchSong();
   }
 ?>
