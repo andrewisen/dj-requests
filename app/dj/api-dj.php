@@ -74,7 +74,9 @@
 		<main role="main" class="container" style="padding-top: 30px;">
 			<div class="my-3 p-3 bg-white rounded box-shadow">
 				<h6 class="border-bottom border-gray pb-2 mb-0">Requests</h6>
+				<div id="echoRequests"></div>
 				<?php
+					/*
 					$songs = array();
 					$output = array();
 
@@ -140,6 +142,7 @@
 							</div>";
 						$i = ++$i;
 					}
+					*/
 				?>
 				<div class='media text-muted pt-3'>
 					<small class="d-block text-right mt-3">
@@ -236,19 +239,43 @@
 
 		$sqlCheckIfSongExists = "SELECT * FROM " . $db_requestTable;
 	    $result = $conn->query($sqlCheckIfSongExists);
+
+		$numberOfSongsToDisplay = $_GET['numberOfSongsToDisplay'];
+
+		if (ctype_digit($numberOfSongsToDisplay)){
+			$numberOfSongsToDisplay = $numberOfSongsToDisplay;
+		}else{
+			$numberOfSongsToDisplay = 3;
+		}
+
+	    $output = "";
+	    $i=0;
+
 		if ($result->num_rows > 0) {
 			// output data of each row
 			while($row = $result->fetch_assoc()) {
+				if ($i >= $numberOfSongsToDisplay){break;}
 				$removeURL = "?remove=" . $row["id"]; 
-				$remove = '<a href="' . $removeURL . '">REMOVE</a>';
+				$remove = "<a href='" . $removeURL . "'>REMOVE</a>";
 				
 				$playURL = "?play=" . $row["id"];
 				$playURL = $playURL  . "&artist=" . $row["artist"]; 
 				$playURL = $playURL . "&title=" . $row["title"]; 
-				$play = '<a href="' . $playURL . '">PLAY</a>';
+				$play = "<a href='" . $playURL . "'>PLAY</a>";
 
-				echo $row["artist"]. " - " . $row["title"] . " (" . $row["requests"]. ")" . " " . $remove . " ". $play . "<br>";
+				$output = $output . "<div class='media text-muted pt-3'>".
+				"<div class='media-body pb-3 mb-0 small lh-125 border-bottom border-gray'>".
+				"<div class='d-flex justify-content-between align-items-center w-100'>".
+				"<strong class='text-gray-dark'>".
+				$row["artist"] . " - " . $row["title"] . " (" . $row["requests"]. ")" .
+				"</strong>".
+				"<div>" . $play . " // (" . $remove . ")</div>" .
+				"</div></div></div><br>";
+				$i = ++$i;
+
+				//echo $row["artist"]. " - " . $row["title"] . " (" . $row["requests"]. ")" . " " . $remove . " ". $play . "<br>";
 			}
+			echo "<script>" . 'document.getElementById("echoRequests").innerHTML = "' . $output . '";' . "</script>";
 		} else {
 			echo "0 results";
 		}
