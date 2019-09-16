@@ -353,19 +353,17 @@ You can clone or fork this project on <a href="http://github.com/andrewisen/dj-r
     * Main function
     */
 
-
     $q = $_POST['searchTxt'];
-    echo "NUll: " . $q;
 
     $spotifyCredentials = getSpotifyCredentials();
     $accessToken = getAccessToken($spotifyCredentials);
 
-    /* Exploded Spotify credentials
+    /* Explode Spotify credentials
     * $client_id = explodeSpotifyCredentials($spotifyCredentials,"client_id");
     * $client_secret = explodeSpotifyCredentials($spotifyCredentials,"client_secret");
     */
     
-    /* Exploded Spotify credentials
+    /* Explode Spotify credentials
     * echo "Your AccessToken: " . $accessToken . "<br>" . "<br>";
     */
 
@@ -375,6 +373,8 @@ You can clone or fork this project on <a href="http://github.com/andrewisen/dj-r
 
     $output = getTrackData($tracks);
 
+    echo '<script type="text/javascript">'.'document.getElementById("searchTxt").value = ""'.'</script>';
+    echo '<script type="text/javascript">'.'document.getElementsByName("searchTxt")[0].placeholder="Click on a song to request"'.'</script>';
     echo '<script type="text/javascript">' . 
     'document.getElementById("parseResponse").innerHTML = "' . 
     $output . 
@@ -383,7 +383,6 @@ You can clone or fork this project on <a href="http://github.com/andrewisen/dj-r
 
   // Main
   if(!empty($_POST)){
-    echo "BEGIN";
     main();
   }
   if(!empty($_GET)){
