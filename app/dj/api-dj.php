@@ -257,11 +257,17 @@
 				if ($i >= $numberOfSongsToDisplay){break;}
 				$removeURL = "?remove=" . $row["id"]; 
 				$remove = "<a href='" . $removeURL . "'>REMOVE</a>";
+
+			
+				$artist = str_replace("'","%27",$row["artist"]);
+				$title = str_replace("'","%27",$row["title"]);
 				
 				$playURL = "?play=" . $row["id"];
-				$playURL = $playURL  . "&artist=" . $row["artist"]; 
-				$playURL = $playURL . "&title=" . $row["title"]; 
+				$playURL = $playURL  . "&artist=" . $artist; 
+				$playURL = $playURL . "&title=" . $title; 
 				$play = "<a href='" . $playURL . "'>PLAY</a>";
+
+
 
 				$output = $output . "<div class='media text-muted pt-3'>".
 				"<div class='media-body pb-3 mb-0 small lh-125 border-bottom border-gray'>".
