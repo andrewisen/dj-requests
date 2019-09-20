@@ -30,13 +30,16 @@ Useful [Docker](https://docker.com) commands after running the container:
 * `docker-compose rm -s -f && docker-compose up --build -d` to reset DB and rebuild the webserver.
 
 ## Usage
+To add a song for request, it is mandatory to send the `venueid` and `floorid` parameters, ie:    
+[http://localhost:9000/index.php?venueid=1&floorid=2](http://localhost:9000/index.php?venueid=1&floorid=2).
+
 To access the DJ-page, it is mandatory to send the `venueid` and `floorid` parameters, ie:    
 [http://localhost:9000/dj/index.php?venueid=1&floorid=2](http://localhost:9000/dj/index.php?venueid=1&floorid=2). You can also add the `songlimit` parameter to limit the amount of songs showed, ie:    
 [http://localhost:9000/dj/index.php?venueid=1&floorid=2&songlimit=0](http://localhost:9000/dj/index.php?venueid=1&floorid=2&songlimit=0)
 
 There is some dummy-data created at the creation of the docker-compose, it's located in [/db/testdata.sql](/db/testdata.sql).
 
-If you want to look at the DB, you can use a DB browser such as [https://sqlectron.github.io/](Sqlectron) or visit [http://localhost:8000](http://localhost:8000) for PHPMyAdmin.
+If you want to look at the DB, you can use a DB browser such as [Sqlectron](https://sqlectron.github.io/) or visit [http://localhost:8000](http://localhost:8000) for PHPMyAdmin.
 
 ## Contributing
 Pull requests are welcome. See Issues for more info.
