@@ -1,6 +1,10 @@
 -- INSERT SOME TEST DATA --
 use request;
 
+SET NAMES utf8;
+SET CHARACTER SET utf8;
+SET GLOBAL time_zone = 'Europe/Stockholm';
+
 INSERT INTO venue
   (name, description, open, close)
 VALUES
@@ -18,8 +22,8 @@ INSERT INTO request
   (songid, artist, title, venueid, floorid, played)
 VALUES
   ('6f54knyJHYJ1v6P591HPWU', 'Avicii', 'Levels - Radio Edit', 1, 2, 0),
-  ('4m1lB7qJ78VPYsQy7RoBcU', 'Ben Rector', 'I Will Always Be Yours', 2, 1, 1),
-  ('4m1lB7qJ78VPYsQy7RoBcU', 'Ben Rector', 'I Will Always Be Yours', 2, 1, 0),
-  ('5HRV0yHL9ioy0FvEXbI8Xu', 'Avicii & Skrillex', 'Levels - Skrillex Remix', 2, 1, 0),
+  ('4m1lB7qJ78VPYsQy7RoBcU', 'Ben Rector', 'I Will Always Be Yours', 1, 2, 0),
+  ('4m1lB7qJ78VPYsQy7RoBcU', 'Ben Rector', 'I Will Always Be Yours', 1, 1, 0),
+  ('5HRV0yHL9ioy0FvEXbI8Xu', 'Avicii & Skrillex', 'Levels - Skrillex Remix', 1, 2, 0),
   ('44ADyYoY5liaRa3EOAl4uf', 'Miley Cyrus', 'Slide Away', 2, 1, 0),
   ('6f54knyJHYJ1v6P591HPWU', 'Avicii', 'Levels - Radio Edit', 1, 2, 0);

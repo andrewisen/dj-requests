@@ -76,7 +76,7 @@
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dancefloor</a>
 							<div class="dropdown-menu" aria-labelledby="dropdown01">
-								<?php echo "hej";//$cc->getFloorMenuItems($venueID, $songLimit); ?>
+								<?php echo $cc->getFloorMenuItems($venueID, $songLimit); ?>
 							</div>
 						</li>
 					</ul>
@@ -104,8 +104,12 @@
 				</div>
 				<div class='media text-muted pt-3'>
 					<small class="d-block text-right mt-3">
-						<a href="?songLimit=100"><b>All Requests</b></a>
-						(<a href="?status=updateNow">Update Now</a>)
+						<?php echo "
+							<a href='?venueid=$venueID&floorid=$floorID&songLimit=100'>
+								<b>All Requests</b>
+							</a>" 
+						?>
+						(<a href="#">Update Now</a>)
 					</small>
 				</div>
 			</div>

@@ -39,7 +39,7 @@
 
       <!-- SEARCH BAR % BUTTON -->
       <div class="text-left mb-4">
-        <form action="api.php" method="post">
+        <form action="index.php" method="post">
           <p class="lead">
             <input class="form-control mr-sm-2" type="search" placeholder="Enter a song (artist or title)" aria-label="Search for a song" name="searchTxt" id="searchTxt" required autofocus>
           </p>
@@ -168,29 +168,7 @@ You can clone or fork this project on <a href="http://github.com/andrewisen/dj-r
     * @see https://developer.spotify.com/documentation/general/guides/authorization-guide/#authorization-code-flow
   */
 
-  /* Debug
-  *
-  * error_reporting(E_ALL);
-  * ini_set('display_errors', 'on');
-  * echo "The time is: ".time();
-  * echo "<br>";
-  */
-
-  function debugToConsole($data) {
-    /**
-    * Write debug to client's browser
-    *
-    * @see https://stackoverflow.com/a/20147885
-    * @param string|array $data
-    * @return string
-    */
-   
-    $output = $data;
-    if (is_array($output))
-      $output = implode(',', $output);
-
-    echo "<script>console.log('" . $output . "' );</script>";
-  }
+  require_once($_SERVER [ 'DOCUMENT_ROOT' ].'/functions.php'); //Debugging
 
   function getSpotifyCredentials($path=null){
     /**
