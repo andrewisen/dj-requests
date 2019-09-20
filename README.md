@@ -21,14 +21,20 @@ Basic understanding of PHP and how to upload file(s) to a FTP.
 Clone repo.
 * Upload the content to your FTP, or 
 * Run it locally with [Docker](https://docker.com):
-```docker run --name dj-requests -v `pwd`/app:/var/www/html -p 9000:80 -d php:7.2-apache```    
-The site is now running at [http://localhost:9000](http://localhost:9000).    
+```docker-compose up -d```      
+Wait a few moments for the DB to start. The site is now running at [http://localhost:9000](http://localhost:9000).
 
-## Developing
+#### Developing
 Useful [Docker](https://docker.com) commands after running the container:    
-* `docker stop dj-requests` to stop the instance.
-* `docker start dj-requests` to start the instance (useful if you ever reboot you computer or Docker engine).
-* `docker restart dj-requests` to restart the instance.
+* `docker-compose down` to stop the instance.
+* `docker-compose rm -s -f && docker-compose up --build -d` to reset DB and rebuild the webserver.
+
+## Usage
+To access the DJ-page, it is mandatory to send the `venueid` and `floorid` parameters, ie:    
+[http://localhost:9000/dj/index.php?venueid=1&floorid=2](http://localhost:9000/dj/index.php?venueid=1&floorid=2). You can also add the `songlimit` parameter to limit the amount of songs showed, ie:    
+[http://localhost:9000/dj/index.php?venueid=1&floorid=2&songlimit=0](http://localhost:9000/dj/index.php?venueid=1&floorid=2&songlimit=0)
+
+There is some dummy-data created at the creation of the docker-compose, it's located in [/db/testdata.sql](/db/testdata.sql).
 
 ## Contributing
 Pull requests are welcome. See Issues for more info.
