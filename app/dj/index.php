@@ -2,6 +2,23 @@
 	// Refresh URL
 	$url1=$_SERVER['REQUEST_URI'];
 	header("Refresh: 30; URL=$url1");
+	
+	require_once($_SERVER [ 'DOCUMENT_ROOT' ].'/class/contentcreator.class.php');
+	$cc = new ContentCreator();
+
+	// TODO: Error handling if venueID and floorId is not set
+	$_GET = array_change_key_case($_GET, CASE_LOWER);
+	$venueID = isset($_GET['venueid']) ? $_GET['venueid'] : NULL; 
+	$floorID = isset($_GET['floorid']) ? $_GET['floorid'] : NULL;
+	$playURI = isset($_GET['play']) ? $_GET['play'] : NULL;
+	$removeURI = isset($_GET['remove']) ? $_GET['remove'] : NULL; 
+	$songLimit = isset($_GET['songlimit']) ? $_GET['songlimit'] : 3;
+	
+	if ($playURI != NULL){
+		$cc->markSongAsPlayed($venueID, $floorID, $playURI);
+	} elseif ($removeURI != NULL) {
+		$cc->markSongAsDeleted($venueID, $floorID, $removeURI);
+	}
 ?>
 <!DOCTYPE html>
 <html>
@@ -37,7 +54,7 @@
 		<header>
 			<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
 				<!--<a class="navbar-brand" href="#">Admin Page</a>-->
-				<a class="navbar-brand" href="#">
+				<a class="navbar-brand" href="/dj">
 					Admin Page
 				</a>
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,9 +75,7 @@
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dancefloor</a>
 							<div class="dropdown-menu" aria-labelledby="dropdown01">
-								<a class="dropdown-item" href="#">Nya</a>
-								<a class="dropdown-item" href="#">Gamla</a>
-								<a class="dropdown-item" href="#">Gröten</a>
+								<?php echo $cc->getFloorMenuItems($venueID, $songLimit); ?>
 							</div>
 						</li>
 					</ul>
@@ -74,19 +89,25 @@
 		<div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded box-shadow">
 		<img class="mr-3" src="../img/logo-white-300.png" alt="" width="48" height="48">
 		<div class="lh-100">
-		<h6 class="mb-0 text-white lh-100">{Dancefloor}</h6>
-		<small>{Venue}</small>
+		<h6 class="mb-0 text-white lh-100"><?php echo $cc->getFloorName($floorID); ?></h6>
+		<small><?php echo $cc->getVenueName($venueID); ?></small>
 		</div>
 		</div>
-
 			<div class="my-3 p-3 bg-white rounded box-shadow">
 				<h6 class="border-bottom border-gray pb-2 mb-0">Requests</h6>
 				<!-- REQUESTS -->
-				<div id="echoRequests"></div>
+				<div id="echoRequests">
+					<?php echo $cc->getAndFormatRequests($venueID, $floorID, $songLimit); 
+					?>
+				</div>
 				<div class='media text-muted pt-3'>
 					<small class="d-block text-right mt-3">
-						<a href="?numberOfSongsToDisplay=100"><b>All Requests</b></a>
-						(<a href="?status=updateNow">Update Now</a>)
+						<?php echo "
+							<a href='?venueid=$venueID&floorid=$floorID&songLimit=100'>
+								<b>All Requests</b>
+							</a>" 
+						?>
+						(<a href="#">Update Now</a>)
 					</small>
 				</div>
 			</div>
@@ -129,150 +150,3 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/holder/2.9.6/holder.js"></script>
 	</body>
 </html>
-<?
-  function debugToConsole($data) {
-    /**
-    * Write debug to client's browser
-    *
-    * @see https://stackoverflow.com/a/20147885
-    * @param string|array $data
-    * @return string
-    */
-   
-    $output = $data;
-    if (is_array($output))
-      $output = implode(',', $output);
-
-    echo "<script>console.log('" . $output . "' );</script>";
-  }
-
-	function main(){
-		/**
-		* Connects to DB and prepare SQL
-		*
-		* @param string $id
-		* @param string $artist
-		* @param string $title
-		*/
-
-
-		$dbPath = "../.database";
-		$dbStr = file_get_contents($dbPath) or die("Unable to open database file!");
-		$db = json_decode($dbStr, true); 
-		$db_servername = $db["servername"];
-		$db_name = $db["dbname"];
-		$db_username = $db['username'];
-		$db_password = $db["password"];
-		$db_requestTable = $db["requestTable"];
-		$db_playTable = $db["playTable"];
-
-		// Create DB connection
-		$conn = mysqli_connect($db_servername, $db_username, $db_password,$db_name);
-		$conn->set_charset("utf8");
-
-		if (!$conn){
-		  die("Connection failed: " . mysqli_connect_error());
-		  echo "NOT OK";
-		} else {
-		  debugToConsole("MySQL connected successfully");
-		}
-
-		$sqlCheckIfSongExists = "SELECT * FROM " . $db_requestTable;
-	    $result = $conn->query($sqlCheckIfSongExists);
-
-		$numberOfSongsToDisplay = $_GET['numberOfSongsToDisplay'];
-
-		if (ctype_digit($numberOfSongsToDisplay)){
-			$numberOfSongsToDisplay = $numberOfSongsToDisplay;
-		}else{
-			$numberOfSongsToDisplay = 3;
-		}
-
-	    $output = "";
-	    $i=0;
-
-		if ($result->num_rows > 0) {
-			// output data of each row
-			while($row = $result->fetch_assoc()) {
-				if ($i >= $numberOfSongsToDisplay){break;}
-				$removeURL = "?remove=" . $row["id"]; 
-				$remove = "<a href='" . $removeURL . "'>REMOVE</a>";
-
-			
-				$artist = str_replace("'","%27",$row["artist"]);
-				$title = str_replace("'","%27",$row["title"]);
-				
-				$playURL = "?play=" . $row["id"];
-				$playURL = $playURL  . "&artist=" . $artist; 
-				$playURL = $playURL . "&title=" . $title; 
-				$play = "<a href='" . $playURL . "'>PLAY</a>";
-
-
-
-				$output = $output . "<div class='media text-muted pt-3'>".
-				"<div class='media-body pb-3 mb-0 small lh-125 border-bottom border-gray'>".
-				"<div class='d-flex justify-content-between align-items-center w-100'>".
-				"<strong class='text-gray-dark'>".
-				$row["artist"] . " - " . $row["title"] . " (" . $row["requests"]. ")" .
-				"</strong>".
-				"<div><b>" . $play . "</b><br>(" . $remove . ")</div>" .
-				"</div></div></div><br>";
-				$i = ++$i;
-			}
-			echo "<script>" . 'document.getElementById("echoRequests").innerHTML = "' . $output . '";' . "</script>";
-		} else {
-			echo "0 results";
-		}
-
-		if(!empty($_GET)){
-			$removeURI = $_GET['remove'];
-			$playURI = $_GET['play'];
-
-			if ($playURI != NULL){
-				playSong($conn, $db_playTable,$playURI,$db_requestTable);
-			} elseif ($removeURI != NULL) {
-				removeSong($conn, $db_requestTable, $removeURI);
-			}
-		}
-	}
-
-	function playSong($conn, $db_playTable,$id,$db_requestTable){
-		echo "Playing: " . $id;
-		$venue = "Nymble";
-		$dancefloor = "Gröten";
-		$artist = $_GET['artist'];
-		$title = $_GET['title'];
-		$artist = str_replace("'","''",$artist);
-		$title = str_replace("'","''",$title);
-
-		date_default_timezone_set("Europe/Stockholm");
-		$time = time();
-
-		$sql = "INSERT INTO " . $db_playTable . " (time,id, artist, title, venue, dancefloor) VALUES (" . $time  .",'" . $id . "', '" . $artist . "','" . $title . "','" . $venue . "', '" . $dancefloor . "')";
-
-		if ($conn->query($sql) === TRUE) {
-		  debugToConsole("Add played song");
-		} else {
-		  debugToConsole("Error: " . $sql . "<br>" . $conn->error);
-		}
-
-		removeSong($conn, $db_requestTable, $id);
-		echo "<script>window.location = 'index.php';</script>";
-
-	}
-
-	function removeSong($conn, $db_table, $id){
-		echo "Removing: " . $id;
-		$sql = 'DELETE FROM ' . $db_table . ' WHERE id="' . $id . '"';
-
-		if ($conn->query($sql) === TRUE) {
-			debugToConsole("Record deleted successfully");
-		} else {
-			debugToConsole("Error deleting record: " . $conn->error);
-		}
-		echo "<script>window.location = 'index.php';</script>";
-	}
-
-  	main();
-
-?>

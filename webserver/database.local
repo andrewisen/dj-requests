@@ -1,0 +1,7 @@
+{
+	"description":"Local Dev SQL Server",
+	"dbname":"request",
+	"servername":"host.docker.internal",
+	"username":"root",
+	"password":"localdev"
+}

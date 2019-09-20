@@ -1,0 +1,15 @@
+#RewriteEngine On
+#RewriteBase /
+
+# Protect the .database file
+#<Files ".database">  
+#  Require all denied
+#</Files>
+
+# Protect the .auth file
+#<Files ".auth">  
+#  Require all denied
+#</Files>
+
+# Disable directory browsing
+#Options All -Indexes
