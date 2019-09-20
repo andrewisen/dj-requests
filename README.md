@@ -36,6 +36,8 @@ To access the DJ-page, it is mandatory to send the `venueid` and `floorid` param
 
 There is some dummy-data created at the creation of the docker-compose, it's located in [/db/testdata.sql](/db/testdata.sql).
 
+If you want to look at the DB, you can use a DB browser such as [https://sqlectron.github.io/](Sqlectron) or visit [http://localhost:8000](http://localhost:8000) for PHPMyAdmin.
+
 ## Contributing
 Pull requests are welcome. See Issues for more info.
 
