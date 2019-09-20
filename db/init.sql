@@ -1,0 +1,44 @@
+CREATE DATABASE request;
+use request;
+
+SET NAMES utf8;
+SET CHARACTER SET utf8;
+SET GLOBAL time_zone = 'Europe/Stockholm';
+
+CREATE TABLE venue (
+  id INT NOT NULL AUTO_INCREMENT,
+  name VARCHAR(255) NOT NULL,
+  description VARCHAR(2048),
+  open TIME,
+  close TIME,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE (id)
+);
+
+CREATE TABLE floor (
+  id INT NOT NULL AUTO_INCREMENT,
+  name VARCHAR(255) NOT NULL,
+  description VARCHAR(2048),
+  genre VARCHAR(2048),
+  -- url VARCHAR(255) NOT NULL,
+  img VARCHAR(255),
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  venueid INT NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE (id)
+);
+
+CREATE TABLE request (
+  id INT NOT NULL AUTO_INCREMENT,
+  created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  songid VARCHAR(22) NOT NULL,
+  artist VARCHAR(255),
+  title VARCHAR(255),
+  venueid INT NOT NULL,
+  floorid INT NOT NULL,
+  played BOOLEAN DEFAULT FALSE,
+  deleted BOOLEAN DEFAULT FALSE,
+  PRIMARY KEY (id),
+  UNIQUE (id)
+);

@@ -1,0 +1,32 @@
+version: "3"
+services:
+  web:
+    build: webserver/
+    links:
+      - db
+    ports:
+      - "9000:80"
+    volumes:
+      - ./app:/var/www/html
+      - ./webserver/database.local:/var/www/html/.database
+
+  db:
+    image: mysql:5.7
+    command: mysqld --sql_mode=""
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: localdev
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    links: 
+        - db:db
+    ports:
+        - 8000:80
+    environment:
+        MYSQL_USER: root
+        MYSQL_PASSWORD: localdev
+        MYSQL_ROOT_PASSWORD: localdev
