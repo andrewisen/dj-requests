@@ -48,6 +48,12 @@ class ContentCreator extends DBHandler{
 		return $output;
 	}
 
+	public function addRequest($venueID, $floorID, $songID, $artist, $title){
+
+		$this->addRequestToDB($venueID, $floorID, $songID, $artist, $title);
+		return True;
+	}
+
 	public function getFloorName($floorID){
 		$result = $this->getFloorNameFromId($floorID);
 		return $result[0]['name'];
@@ -59,12 +65,12 @@ class ContentCreator extends DBHandler{
 	}
 
 	public function markSongAsPlayed($venueID, $floorID, $songID){
-		$result = $this->markSongAsPlayed($venueID, $floorID, $songID);
+		$result = $this->markSongAsPlayedDB($venueID, $floorID, $songID);
 		return True;
 	}
 
 	public function markSongAsDeleted($venueID, $floorID, $songID){
-		$result = $this->markSongAsDeleted($venueID, $floorID, $songID);
+		$result = $this->markSongAsDeletedDB($venueID, $floorID, $songID);
 		return True; 
 	}
 

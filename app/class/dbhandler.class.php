@@ -19,7 +19,7 @@ class DBHandler {
 		DB::$encoding = 'utf8';
 	}	
 
-	protected function getRequests($venueID, $floorID, $songLimit = 3){
+	protected function getRequests($venueID, $floorID, $songLimit){
 		return DB::query("
 			SELECT id, artist, title, songid, Count(*) AS requests
 			FROM request WHERE venueid=%i AND floorid=%i AND played=FALSE AND deleted=FALSE
@@ -27,6 +27,13 @@ class DBHandler {
 			ORDER BY requests DESC
 			LIMIT %i
 		", $venueID, $floorID, $songLimit);
+	}
+
+	protected function addRequestToDB($venueID, $floorID, $songID, $artist, $title){
+		DB::query("
+      		INSERT INTO request (venueid, floorid, songid, artist, title)
+      		VALUES (%i, %i, %s, %s, %s);
+      		", $venueID, $floorID, $songID, $artist, $title);
 	}
 
     protected function getFloorNameFromId($floorID){
@@ -52,7 +59,7 @@ class DBHandler {
 			", $venueID);
 	}
 
-	protected function markSongAsPlayed($venueID, $floorID, $songID){
+	protected function markSongAsPlayedDB($venueID, $floorID, $songID){
 		return DB::query("
 			UPDATE request
 			SET played = TRUE
@@ -60,7 +67,7 @@ class DBHandler {
 		", $venueID, $floorID, $songID);
 	}
 
-	protected function markSongAsDeleted($venueID, $floorID, $songID){
+	protected function markSongAsDeletedDB($venueID, $floorID, $songID){
 		return DB::query("
 			UPDATE request
 			SET deleted = TRUE
