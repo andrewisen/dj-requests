@@ -4,6 +4,7 @@
 	header("Refresh: 30; URL=$url1");
 	
 	require_once($_SERVER [ 'DOCUMENT_ROOT' ].'/class/contentcreator.class.php');
+	$cc = new ContentCreator();
 
 	// TODO: Error handling if venueID and floorId is not set
 	$_GET = array_change_key_case($_GET, CASE_LOWER);
@@ -13,8 +14,6 @@
 	$removeURI = isset($_GET['remove']) ? $_GET['remove'] : NULL; 
 	$songLimit = isset($_GET['songlimit']) ? $_GET['songlimit'] : 3;
 	
-	$cc = new ContentCreator();
-
 	if ($playURI != NULL){
 		$cc->markSongAsPlayed($venueID, $floorID, $playURI);
 	} elseif ($removeURI != NULL) {
@@ -94,7 +93,6 @@
 		<small><?php echo $cc->getVenueName($venueID); ?></small>
 		</div>
 		</div>
-
 			<div class="my-3 p-3 bg-white rounded box-shadow">
 				<h6 class="border-bottom border-gray pb-2 mb-0">Requests</h6>
 				<!-- REQUESTS -->
